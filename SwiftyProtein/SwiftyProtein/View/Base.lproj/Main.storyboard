@@ -119,11 +119,37 @@
                     <connections>
                         <outlet property="searchBar" destination="Azl-34-rUq" id="ecX-sv-EXR"/>
                         <outlet property="tableView" destination="FFQ-A3-E9E" id="VlM-ce-hDW"/>
+                        <segue destination="OFa-72-Kv0" kind="show" identifier="showLigand" id="Lmt-3r-eM7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X1U-Wc-85b" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1331.8840579710145" y="135.9375"/>
+        </scene>
+        <!--Protein View Controller-->
+        <scene sceneID="U6B-jF-bqq">
+            <objects>
+                <viewController id="OFa-72-Kv0" customClass="ProteinViewController" customModule="SwiftyProtein" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3lU-5A-0IX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" allowsCameraControl="YES" autoenablesDefaultLighting="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c3P-Eb-EuW">
+                                <rect key="frame" x="0.0" y="88" width="414" height="489"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </sceneKitView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="IdI-wY-x46"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="55U-mn-TiX"/>
+                    <connections>
+                        <outlet property="sceneView" destination="c3P-Eb-EuW" id="MO0-8Q-luO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DN6-g6-OS8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2118.840579710145" y="135.9375"/>
         </scene>
     </scenes>
     <resources>
