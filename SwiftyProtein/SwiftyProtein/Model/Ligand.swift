@@ -12,16 +12,16 @@ import UIKit
 struct Atom {
     let id: Int
     let atom_name: String
-    let xPos: Float
-    let yPos: Float
-    let zPoz: Float
+    var xPos: Float
+    var yPos: Float
+    var zPos: Float
 
     init(atomData: String) {
         id = (atomData[atomData.index(atomData.startIndex, offsetBy: 6)...atomData.index(atomData.startIndex, offsetBy: 10)] as NSString).integerValue
         atom_name = String(atomData[atomData.index(atomData.startIndex, offsetBy: 76)...atomData.index(atomData.startIndex, offsetBy: 77)]).trimmingCharacters(in: .whitespacesAndNewlines)
         xPos = (atomData[atomData.index(atomData.startIndex, offsetBy: 30)...atomData.index(atomData.startIndex, offsetBy: 37)] as NSString).floatValue
         yPos = (atomData[atomData.index(atomData.startIndex, offsetBy: 38)...atomData.index(atomData.startIndex, offsetBy: 45)] as NSString).floatValue
-        zPoz = (atomData[atomData.index(atomData.startIndex, offsetBy: 47)...atomData.index(atomData.startIndex, offsetBy: 54)] as NSString).floatValue
+        zPos = (atomData[atomData.index(atomData.startIndex, offsetBy: 47)...atomData.index(atomData.startIndex, offsetBy: 54)] as NSString).floatValue
     }
 }
 

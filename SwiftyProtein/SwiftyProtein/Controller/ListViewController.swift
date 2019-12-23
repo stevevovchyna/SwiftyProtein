@@ -21,6 +21,16 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 
     // MARK: - Table view data source
 
@@ -37,9 +47,13 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         requestLigand(forLigand: ligands[indexPath.row]){ result in
-            self.ligandToPass = Ligand(forLigand: self.ligands[indexPath.row], withDataSet: result)
             DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "showLigand", sender: self)
+                if result != "" {
+                    self.ligandToPass = Ligand(forLigand: self.ligands[indexPath.row], withDataSet: result)
+                    self.performSegue(withIdentifier: "showLigand", sender: self)
+                } else {
+                    self.presentAlert(text: "Oops! This ligand is not available at the moment")
+                }
             }
         }
     }
@@ -77,5 +91,11 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             let resultString = String(data: data, encoding: .utf8)!
             completion(resultString)
         }.resume()
+    }
+    
+    func presentAlert(text: String) {
+        let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }

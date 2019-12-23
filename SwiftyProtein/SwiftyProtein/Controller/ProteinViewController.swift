@@ -49,7 +49,7 @@ class Atoms {
                 sphere.firstMaterial?.diffuse.contents = UIColor.systemPink
             }
             let sphereNode = SCNNode(geometry: sphere)
-            sphereNode.position = SCNVector3(x: atom.xPos, y: atom.yPos, z: atom.zPoz)
+            sphereNode.position = SCNVector3(x: atom.xPos, y: atom.yPos, z: atom.zPos)
             liganeMolecule.addChildNode(sphereNode)
         }
         for bonds in ligand.allConects {
@@ -57,8 +57,8 @@ class Atoms {
                 let newBond = SCNNode()
                 let startAtom = ligand.allAtoms[bonds.id - 1]
                 let endAtom = ligand.allAtoms[bond - 1]
-                let startVector = SCNVector3(x: startAtom.xPos, y: startAtom.yPos, z: startAtom.zPoz)
-                let endVector = SCNVector3(x: endAtom.xPos, y: endAtom.yPos, z: endAtom.zPoz)
+                let startVector = SCNVector3(x: startAtom.xPos, y: startAtom.yPos, z: startAtom.zPos)
+                let endVector = SCNVector3(x: endAtom.xPos, y: endAtom.yPos, z: endAtom.zPos)
                 liganeMolecule.addChildNode(newBond.buildConect(from: startVector, to: endVector, radius: 0.05, color: .black))
             }
         }
@@ -73,7 +73,6 @@ extension SCNNode {
             if length == 0 {
                 return SCNVector3(0.0, 0.0, 0.0)
             }
-
             return SCNVector3( iv.x / length, iv.y / length, iv.z / length)
 
         }
@@ -88,35 +87,26 @@ extension SCNNode {
             let l = CGFloat(sqrt(w.x * w.x + w.y * w.y + w.z * w.z))
 
             if l == 0.0 {
-                // two points together.
                 let sphere = SCNSphere(radius: radius)
                 sphere.firstMaterial?.diffuse.contents = color
                 self.geometry = sphere
                 self.position = startPoint
                 return self
-
             }
 
             let cyl = SCNCylinder(radius: radius, height: l)
             cyl.firstMaterial?.diffuse.contents = color
 
             self.geometry = cyl
-
-            //original vector of cylinder above 0,0,0
             let ov = SCNVector3(0, l/2.0,0)
-            //target vector, in new coordination
             let nv = SCNVector3((endPoint.x - startPoint.x)/2.0, (endPoint.y - startPoint.y)/2.0,
                                 (endPoint.z-startPoint.z)/2.0)
-
-            // axis between two vector
             let av = SCNVector3( (ov.x + nv.x)/2.0, (ov.y+nv.y)/2.0, (ov.z+nv.z)/2.0)
-
-            //normalized axis vector
             let av_normalized = normalizeVector(av)
-            let q0 = Float(0.0) //cos(angel/2), angle is always 180 or M_PI
-            let q1 = Float(av_normalized.x) // x' * sin(angle/2)
-            let q2 = Float(av_normalized.y) // y' * sin(angle/2)
-            let q3 = Float(av_normalized.z) // z' * sin(angle/2)
+            let q0 = Float(0.0)
+            let q1 = Float(av_normalized.x)
+            let q2 = Float(av_normalized.y)
+            let q3 = Float(av_normalized.z)
 
             let r_m11 = q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3
             let r_m12 = 2 * q1 * q2 + 2 * q0 * q3
@@ -166,27 +156,26 @@ class ProteinViewController: UIViewController {
     }
     
     func sceneSetup() {
-      let scene = SCNScene()
-      
-      let ambientLightNode = SCNNode()
-      ambientLightNode.light = SCNLight()
+        let scene = SCNScene()
+        let ambientLightNode = SCNNode()
+        ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = SCNLight.LightType.ambient
-      ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
-      scene.rootNode.addChildNode(ambientLightNode)
+        ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
+        scene.rootNode.addChildNode(ambientLightNode)
       
-      let omniLightNode = SCNNode()
-      omniLightNode.light = SCNLight()
+        let omniLightNode = SCNNode()
+        omniLightNode.light = SCNLight()
         omniLightNode.light!.type = SCNLight.LightType.omni
-      omniLightNode.light!.color = UIColor(white: 0.75, alpha: 1.0)
-      omniLightNode.position = SCNVector3Make(0, 50, 50)
-      scene.rootNode.addChildNode(omniLightNode)
+        omniLightNode.light!.color = UIColor(white: 0.75, alpha: 1.0)
+        omniLightNode.position = SCNVector3Make(0, 50, 50)
+        scene.rootNode.addChildNode(omniLightNode)
       
-      let cameraNode = SCNNode()
-      cameraNode.camera = SCNCamera()
-      cameraNode.position = SCNVector3Make(0, 0, 25)
-      scene.rootNode.addChildNode(cameraNode)
+        let cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        cameraNode.position = SCNVector3Make(0, 0, 20)
+        scene.rootNode.addChildNode(cameraNode)
             
-      sceneView.scene = scene
+        sceneView.scene = scene
     }
     
 
