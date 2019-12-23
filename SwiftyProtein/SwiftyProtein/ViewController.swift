@@ -12,7 +12,17 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        let authString = "https://www.rcsb.org/pdb/rest/describeHet?chemicalID=001"
+        let url = URL(string: authString)
+        var request = URLRequest(url: url!)
+        request.httpMethod = "get"
+
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            guard let data = data else { return }
+            print(String(data: data, encoding: .utf8)!)
+        }.resume()
+
     }
 
 
