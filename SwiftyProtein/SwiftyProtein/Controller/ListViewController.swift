@@ -7,18 +7,25 @@
 //
 
 import UIKit
+import Foundation
 
 class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     
     var ligands : [String] = ligandsArray
     var ligandToPass : Ligand?
+    var infoToPass : [LigandInfo] = []
+    let status = UIActivityIndicatorView()
     
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var searchBar: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        status.frame = CGRect(x: view.frame.size.width / 2, y:  view.frame.size.height / 2, width: 30, height: 30)
+        status.style = .large
+        self.view.addSubview(status)
         
     }
     
@@ -45,14 +52,24 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        requestLigand(forLigand: ligands[indexPath.row]){ result in
-            DispatchQueue.main.async {
-                if result != "" {
-                    self.ligandToPass = Ligand(forLigand: self.ligands[indexPath.row], withDataSet: result)
-                    self.performSegue(withIdentifier: "showLigand", sender: self)
-                } else {
-                    self.presentAlert(text: "Oops! This ligand is not available at the moment")
+        status.isHidden = false
+        status.startAnimating()
+        tableView.isUserInteractionEnabled = false
+        requestLigand(forLigand: ligands[indexPath.row], atIndex: indexPath.row){ resultLigand in
+            switch resultLigand {
+            case .error(let err):
+                self.presentAlert(text: err)
+            case .success(let ligandOut):
+                requestLigandInfo(forLigand: self.ligands[indexPath.row]){ info in
+                    DispatchQueue.main.async {
+                        self.infoToPass = info
+                        self.ligandToPass = ligandOut
+                        self.tableView.isUserInteractionEnabled = true
+                        self.status.isHidden = true
+                        self.status.stopAnimating()
+                        tableView.deselectRow(at: indexPath, animated: true)
+                        self.performSegue(withIdentifier: "showLigand", sender: self)
+                    }
                 }
             }
         }
@@ -62,6 +79,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         if segue.identifier == "showLigand" {
             let vc = segue.destination as! ProteinViewController
             vc.ligandToDisplay = ligandToPass
+            vc.ligandInfo = infoToPass
         }
     }
 
@@ -78,19 +96,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             ligands = ligandsArray.filter { $0.lowercased().contains(searchText.lowercased()) }
             tableView.reloadData()
         }
-    }
-    
-    func requestLigand(forLigand ligand: String, completion: @escaping (String) -> Void) {
-        let authString = "https://files.rcsb.org/ligands/view/\(ligand.lowercased())_ideal.pdb"
-        let url = URL(string: authString)
-        var request = URLRequest(url: url!)
-        request.httpMethod = "get"
-
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            guard let data = data else { return }
-            let resultString = String(data: data, encoding: .utf8)!
-            completion(resultString)
-        }.resume()
     }
     
     func presentAlert(text: String) {

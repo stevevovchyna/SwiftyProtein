@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		102F0F7123B568C600ACDFC2 /* SceneMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102F0F7023B568C600ACDFC2 /* SceneMethods.swift */; };
 		10C1ACC823B03102008B16C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACC723B03102008B16C7 /* AppDelegate.swift */; };
 		10C1ACCA23B03102008B16C7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACC923B03102008B16C7 /* SceneDelegate.swift */; };
 		10C1ACCC23B03102008B16C7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACCB23B03102008B16C7 /* ViewController.swift */; };
@@ -18,9 +19,11 @@
 		10C1ACE223B04D76008B16C7 /* LigandsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACE123B04D76008B16C7 /* LigandsList.swift */; };
 		10C1ACE423B0D66C008B16C7 /* ProteinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACE323B0D66C008B16C7 /* ProteinViewController.swift */; };
 		10C1ACE623B0D746008B16C7 /* Ligand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACE523B0D746008B16C7 /* Ligand.swift */; };
+		10DD247D23C0ECE1000056E3 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DD247C23C0ECE1000056E3 /* Networking.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		102F0F7023B568C600ACDFC2 /* SceneMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneMethods.swift; sourceTree = "<group>"; };
 		10C1ACC423B03102008B16C7 /* SwiftyProtein.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftyProtein.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10C1ACC723B03102008B16C7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10C1ACC923B03102008B16C7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -34,6 +37,7 @@
 		10C1ACE123B04D76008B16C7 /* LigandsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LigandsList.swift; sourceTree = "<group>"; };
 		10C1ACE323B0D66C008B16C7 /* ProteinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinViewController.swift; sourceTree = "<group>"; };
 		10C1ACE523B0D746008B16C7 /* Ligand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ligand.swift; sourceTree = "<group>"; };
+		10DD247C23C0ECE1000056E3 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,8 @@
 			children = (
 				10C1ACE123B04D76008B16C7 /* LigandsList.swift */,
 				10C1ACE523B0D746008B16C7 /* Ligand.swift */,
+				102F0F7023B568C600ACDFC2 /* SceneMethods.swift */,
+				10DD247C23C0ECE1000056E3 /* Networking.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -178,6 +184,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				10C1ACE223B04D76008B16C7 /* LigandsList.swift in Sources */,
+				10DD247D23C0ECE1000056E3 /* Networking.swift in Sources */,
+				102F0F7123B568C600ACDFC2 /* SceneMethods.swift in Sources */,
 				10C1ACDC23B0377E008B16C7 /* LoginViewController.swift in Sources */,
 				10C1ACCC23B03102008B16C7 /* ViewController.swift in Sources */,
 				10C1ACC823B03102008B16C7 /* AppDelegate.swift in Sources */,

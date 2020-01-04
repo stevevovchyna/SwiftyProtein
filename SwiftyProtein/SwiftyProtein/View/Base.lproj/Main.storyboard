@@ -72,7 +72,7 @@
             </objects>
             <point key="canvasLocation" x="525" y="139"/>
         </scene>
-        <!--List View Controller-->
+        <!--SwiftyProteins-->
         <scene sceneID="cqU-Lh-A9i">
             <objects>
                 <viewController id="HgR-YL-6Uz" customClass="ListViewController" customModule="SwiftyProtein" customModuleProvider="target" sceneMemberID="viewController">
@@ -118,7 +118,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="vZ8-b3-rjf"/>
                     </view>
-                    <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="0aj-0Y-xNP"/>
+                    <navigationItem key="navigationItem" title="SwiftyProteins" largeTitleDisplayMode="never" id="0aj-0Y-xNP">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="THQ-nQ-bIg"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="searchBar" destination="Azl-34-rUq" id="ecX-sv-EXR"/>
                         <outlet property="tableView" destination="FFQ-A3-E9E" id="VlM-ce-hDW"/>
@@ -127,7 +129,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X1U-Wc-85b" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1331.8840579710145" y="135.9375"/>
+            <point key="canvasLocation" x="1330.4347826086957" y="135.9375"/>
         </scene>
         <!--Protein View Controller-->
         <scene sceneID="U6B-jF-bqq">
@@ -143,12 +145,34 @@
                                     <constraint firstAttribute="height" constant="400" id="G0b-G2-OgZ"/>
                                 </constraints>
                             </sceneKitView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hnb-73-o0y">
+                                <rect key="frame" x="0.0" y="488" width="414" height="408"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ligandInfo" id="86l-j6-M3R">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="86l-j6-M3R" id="mqF-Tq-CvO">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="OFa-72-Kv0" id="etb-Vx-OfV"/>
+                                    <outlet property="delegate" destination="OFa-72-Kv0" id="SSM-zj-qaZ"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Hnb-73-o0y" secondAttribute="bottom" id="88r-mF-cvM"/>
                             <constraint firstItem="c3P-Eb-EuW" firstAttribute="trailing" secondItem="IdI-wY-x46" secondAttribute="trailing" id="TGc-Di-bY3"/>
                             <constraint firstItem="c3P-Eb-EuW" firstAttribute="top" secondItem="IdI-wY-x46" secondAttribute="top" id="ZdR-lB-vG4"/>
+                            <constraint firstItem="Hnb-73-o0y" firstAttribute="leading" secondItem="IdI-wY-x46" secondAttribute="leading" id="ZpF-6o-9xV"/>
+                            <constraint firstItem="Hnb-73-o0y" firstAttribute="trailing" secondItem="IdI-wY-x46" secondAttribute="trailing" id="amU-yW-96x"/>
                             <constraint firstItem="c3P-Eb-EuW" firstAttribute="leading" secondItem="IdI-wY-x46" secondAttribute="leading" id="f7D-T1-tNj"/>
+                            <constraint firstItem="Hnb-73-o0y" firstAttribute="top" secondItem="c3P-Eb-EuW" secondAttribute="bottom" id="org-sP-wX3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="IdI-wY-x46"/>
                     </view>

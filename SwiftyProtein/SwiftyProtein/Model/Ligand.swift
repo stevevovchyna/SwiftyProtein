@@ -42,7 +42,48 @@ struct Conect {
     }
 }
 
-class Ligand {
+struct LigandInfo {
+    let name : String
+    let identifiers : String
+    let formula : String
+    let formulaWeight : String
+    let type : String
+    let smiles : String
+    let inchi : String
+    let inchiKey : String
+    
+    let formalCharge : String
+    let atomCount : String
+    let chiralAtomCount : String
+    let chiralAtomsStr : String
+    let bondCount : String
+    let aromaticBondCount : String
+}
+
+enum SerializationError: Error {
+    case missing(String)
+}
+
+extension LigandInfo {
+    init(json: [[String: Any]]) {
+        self.aromaticBondCount = String(json[0]["aromaticBondCount"] as? Double ?? 0)
+        self.atomCount = String(json[0]["atomCount"] as? Double ?? 0)
+        self.bondCount = String(json[0]["bondCount"] as? Double ?? 0)
+        self.chiralAtomCount = String(json[0]["chiralAtomCount"] as? Double ?? 0)
+        self.chiralAtomsStr = json[0]["chiralAtomsStr"] as? String ?? "No data"
+        self.formalCharge = String(json[0]["formalCharge"] as? Double ?? 0)
+        self.formula = json[0]["formula"] as? String ?? "No data"
+        self.formulaWeight = json[0]["formulaWeight"] as? String ?? "No data"
+        self.identifiers = json[0]["identifiers"] as? String ?? "No data"
+        self.inchi = json[0]["inchi"] as? String ?? "No data"
+        self.inchiKey = json[0]["inchiKey"] as? String ?? "No data"
+        self.smiles = json[0]["smiles"] as? String ?? "No data"
+        self.type = json[0]["type"] as? String ?? "No data"
+        self.name = json[0]["name"] as? String ?? "No data"
+    }
+}
+
+struct Ligand {
     let name: String
     var allAtoms: [Atom] = []
     var allConects: [Conect] = []
