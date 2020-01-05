@@ -59,16 +59,29 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             switch resultLigand {
             case .error(let err):
                 self.presentAlert(text: err)
+                self.tableView.isUserInteractionEnabled = true
+                self.status.isHidden = true
+                self.status.stopAnimating()
+                tableView.deselectRow(at: indexPath, animated: true)
             case .success(let ligandOut):
-                requestLigandInfo(forLigand: self.ligands[indexPath.row]){ info in
+                requestLigandInfo(forLigand: self.ligands[indexPath.row]){ resultInfo in
                     DispatchQueue.main.async {
-                        self.infoToPass = info
-                        self.ligandToPass = ligandOut
-                        self.tableView.isUserInteractionEnabled = true
-                        self.status.isHidden = true
-                        self.status.stopAnimating()
-                        tableView.deselectRow(at: indexPath, animated: true)
-                        self.performSegue(withIdentifier: "showLigand", sender: self)
+                        switch resultInfo {
+                        case .error(let err):
+                            self.presentAlert(text: err)
+                            self.tableView.isUserInteractionEnabled = true
+                            self.status.isHidden = true
+                            self.status.stopAnimating()
+                            tableView.deselectRow(at: indexPath, animated: true)
+                        case .success(let ligandInfoOut):
+                            self.infoToPass = ligandInfoOut
+                            self.ligandToPass = ligandOut
+                            self.tableView.isUserInteractionEnabled = true
+                            self.status.isHidden = true
+                            self.status.stopAnimating()
+                            tableView.deselectRow(at: indexPath, animated: true)
+                            self.performSegue(withIdentifier: "showLigand", sender: self)
+                        }
                     }
                 }
             }
