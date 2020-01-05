@@ -20,6 +20,8 @@
 		10C1ACE423B0D66C008B16C7 /* ProteinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACE323B0D66C008B16C7 /* ProteinViewController.swift */; };
 		10C1ACE623B0D746008B16C7 /* Ligand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACE523B0D746008B16C7 /* Ligand.swift */; };
 		10DD247D23C0ECE1000056E3 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DD247C23C0ECE1000056E3 /* Networking.swift */; };
+		10DD248023C25C4D000056E3 /* LigandInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DD247E23C25C4D000056E3 /* LigandInfoTableViewCell.swift */; };
+		10DD248123C25C4D000056E3 /* LigandInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 10DD247F23C25C4D000056E3 /* LigandInfoTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		10C1ACE323B0D66C008B16C7 /* ProteinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinViewController.swift; sourceTree = "<group>"; };
 		10C1ACE523B0D746008B16C7 /* Ligand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ligand.swift; sourceTree = "<group>"; };
 		10DD247C23C0ECE1000056E3 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		10DD247E23C25C4D000056E3 /* LigandInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LigandInfoTableViewCell.swift; sourceTree = "<group>"; };
+		10DD247F23C25C4D000056E3 /* LigandInfoTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LigandInfoTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +91,8 @@
 			children = (
 				10C1ACCD23B03102008B16C7 /* Main.storyboard */,
 				10C1ACD223B03107008B16C7 /* LaunchScreen.storyboard */,
+				10DD247E23C25C4D000056E3 /* LigandInfoTableViewCell.swift */,
+				10DD247F23C25C4D000056E3 /* LigandInfoTableViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -172,6 +178,7 @@
 			files = (
 				10C1ACD423B03107008B16C7 /* LaunchScreen.storyboard in Resources */,
 				10C1ACD123B03107008B16C7 /* Assets.xcassets in Resources */,
+				10DD248123C25C4D000056E3 /* LigandInfoTableViewCell.xib in Resources */,
 				10C1ACCF23B03102008B16C7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -188,6 +195,7 @@
 				102F0F7123B568C600ACDFC2 /* SceneMethods.swift in Sources */,
 				10C1ACDC23B0377E008B16C7 /* LoginViewController.swift in Sources */,
 				10C1ACCC23B03102008B16C7 /* ViewController.swift in Sources */,
+				10DD248023C25C4D000056E3 /* LigandInfoTableViewCell.swift in Sources */,
 				10C1ACC823B03102008B16C7 /* AppDelegate.swift in Sources */,
 				10C1ACE423B0D66C008B16C7 /* ProteinViewController.swift in Sources */,
 				10C1ACE023B04D09008B16C7 /* ListViewController.swift in Sources */,
@@ -346,7 +354,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stevevovchyna.SwiftyProtein;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -364,7 +372,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stevevovchyna.SwiftyProtein;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

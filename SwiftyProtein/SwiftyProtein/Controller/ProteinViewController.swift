@@ -11,6 +11,7 @@ import SceneKit
 
 class ProteinViewController: UIViewController {
     
+    @IBOutlet weak var tableView: UITableView!
     var ligandToDisplay: Ligand?
     var ligandInfo : [LigandInfo] = []
     @IBOutlet weak var sceneView: SCNView!
@@ -19,26 +20,33 @@ class ProteinViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(UINib(nibName: "LigandInfoTableViewCell", bundle: nil), forCellReuseIdentifier: "ligandInfo")
+        tableView.separatorStyle = .none
         sceneSetup()
         geometryNode = Atoms.addLigandAtoms(ligand: ligandToDisplay!)
         sceneView.scene!.rootNode.addChildNode(geometryNode)
-        
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
-
         sceneView.addGestureRecognizer(tap)
-
-        print("In da hauz", ligandInfo[0].name)
     }
     
     @objc func handleTap(rec: UITapGestureRecognizer){
-           if rec.state == .ended {
-                let location: CGPoint = rec.location(in: sceneView)
-                let hits = self.sceneView.hitTest(location, options: nil)
-                if !hits.isEmpty{
-                    let tappedNode = hits.first?.node
-                    print(tappedNode!.name!)
-                }
-           }
+        if rec.state == .ended {
+            let location: CGPoint = rec.location(in: sceneView)
+            let hits = self.sceneView.hitTest(location, options: nil)
+            if !hits.isEmpty {
+                guard let tappedNode = hits.first?.node else { return }
+                let text = SCNText(string: tappedNode.name, extrusionDepth: 2)
+                let material = SCNMaterial()
+                material.diffuse.contents = tappedNode.geometry?.firstMaterial?.diffuse.contents
+                text.materials = [material]
+                let node = SCNNode()
+                let pos = tappedNode.position
+                node.position = SCNVector3(pos.x + 0.05, pos.y + 0.05, pos.z + 0.05)
+                node.scale = SCNVector3(0.05, 0.05, 0.05)
+                node.geometry = text
+                sceneView.scene?.rootNode.addChildNode(node)
+            }
+        }
     }
     
     func sceneSetup() {
@@ -67,44 +75,47 @@ class ProteinViewController: UIViewController {
 }
 
 extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let mirror = Mirror(reflecting: ligandInfo[0])
-        return mirror.children.count
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath)
-        switch indexPath.row {
-        case 0:
-            cell.textLabel?.text = ligandInfo[0].name
-        case 1:
-        cell.textLabel?.text = ligandInfo[0].name
-        case 2:
-        cell.textLabel?.text = ligandInfo[0].chiralAtomsStr
-        case 3:
-        cell.textLabel?.text = ligandInfo[0].bondCount
-        case 4:
-        cell.textLabel?.text = ligandInfo[0].formula
-        case 5:
-        cell.textLabel?.text = ligandInfo[0].name
-        case 6:
-        cell.textLabel?.text = ligandInfo[0].name
-        case 7:
-        cell.textLabel?.text = ligandInfo[0].name
-        case 8:
-        cell.textLabel?.text = ligandInfo[0].name
-        case 9:
-        cell.textLabel?.text = ligandInfo[0].name
-        case 10:
-        cell.textLabel?.text = ligandInfo[0].name
-        default:
-            cell.textLabel?.text = "No data"
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath) as! LigandInfoTableViewCell
+        cell.ligandNameLabel.text = "Name"
+        cell.ligandName.text = ligandInfo[0].name
+        cell.identifiersLabel.text = "Identifiers"
+        cell.identifiers.text = ligandInfo[0].identifiers
+        cell.formulaLabel.text = "Formula"
+        cell.formula.text = ligandInfo[0].formula
+        cell.molecularWeightLabel.text = "Molecular Weight"
+        cell.molecularWeight.text = ligandInfo[0].formulaWeight
+        cell.typeLabel.text = "Type"
+        cell.type.text = ligandInfo[0].type
+        cell.isometricSmilesLabel.text = "Isometric Smiles"
+        cell.isometricSmiles.text = ligandInfo[0].smiles
+        cell.InChlLabel.text = "InChl"
+        cell.InChl.text = ligandInfo[0].inchi
+        cell.InChIKeyLabel.text = "InChl Key"
+        cell.InChIKey.text = ligandInfo[0].inchiKey
+        cell.formalChargeLabel.text = "Formal Charge"
+        cell.formalCharge.text = ligandInfo[0].formalCharge
+        cell.atomCountLabel.text = "Atom Count"
+        cell.atomCount.text = ligandInfo[0].atomCount
+        cell.chiralAtomCountLabel.text = "Chiral Atom Count"
+        cell.chiralAtomCount.text = ligandInfo[0].chiralAtomCount
+        cell.chiralAtomsLabel.text = "Chiral Atoms"
+        cell.chiralAtoms.text = ligandInfo[0].chiralAtomsStr
+        cell.boundCountLabel.text = "Bound Count"
+        cell.boundCount.text = ligandInfo[0].bondCount
+        cell.aromaticBoundCountLabel.text = "Aromatic Bound Count"
+        cell.aromaticBoundCount.text = ligandInfo[0].aromaticBondCount
         return cell
     }
     
-    
-    
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.isSelected = false
+    }
 }
 
