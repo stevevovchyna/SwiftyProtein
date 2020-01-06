@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		102F0F7123B568C600ACDFC2 /* SceneMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102F0F7023B568C600ACDFC2 /* SceneMethods.swift */; };
+		1074B31A23C2A7CD00CE1EA8 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1074B31923C2A7CD00CE1EA8 /* ARViewController.swift */; };
 		10C1ACC823B03102008B16C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACC723B03102008B16C7 /* AppDelegate.swift */; };
 		10C1ACCA23B03102008B16C7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACC923B03102008B16C7 /* SceneDelegate.swift */; };
 		10C1ACCC23B03102008B16C7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACCB23B03102008B16C7 /* ViewController.swift */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		102F0F7023B568C600ACDFC2 /* SceneMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneMethods.swift; sourceTree = "<group>"; };
+		1074B31923C2A7CD00CE1EA8 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		10C1ACC423B03102008B16C7 /* SwiftyProtein.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftyProtein.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10C1ACC723B03102008B16C7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10C1ACC923B03102008B16C7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				10C1ACDB23B0377E008B16C7 /* LoginViewController.swift */,
 				10C1ACDF23B04D09008B16C7 /* ListViewController.swift */,
 				10C1ACE323B0D66C008B16C7 /* ProteinViewController.swift */,
+				1074B31923C2A7CD00CE1EA8 /* ARViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				10C1ACE223B04D76008B16C7 /* LigandsList.swift in Sources */,
 				10DD247D23C0ECE1000056E3 /* Networking.swift in Sources */,
 				102F0F7123B568C600ACDFC2 /* SceneMethods.swift in Sources */,
+				1074B31A23C2A7CD00CE1EA8 /* ARViewController.swift in Sources */,
 				10C1ACDC23B0377E008B16C7 /* LoginViewController.swift in Sources */,
 				10C1ACCC23B03102008B16C7 /* ViewController.swift in Sources */,
 				10DD248023C25C4D000056E3 /* LigandInfoTableViewCell.swift in Sources */,
@@ -347,6 +351,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 68V7NHY2R5;
 				INFOPLIST_FILE = SwiftyProtein/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -365,6 +370,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 68V7NHY2R5;
 				INFOPLIST_FILE = SwiftyProtein/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

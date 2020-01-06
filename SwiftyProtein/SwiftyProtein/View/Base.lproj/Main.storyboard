@@ -177,7 +177,14 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="IdI-wY-x46"/>
                     </view>
-                    <navigationItem key="navigationItem" id="55U-mn-TiX"/>
+                    <navigationItem key="navigationItem" id="55U-mn-TiX">
+                        <barButtonItem key="rightBarButtonItem" title="AR" id="TBL-nD-hbl">
+                            <connections>
+                                <action selector="showAR:" destination="OFa-72-Kv0" id="Nzv-vR-ttL"/>
+                                <segue destination="ahh-Dc-ZeQ" kind="show" identifier="showAR" id="kpe-gk-jmQ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="sceneView" destination="c3P-Eb-EuW" id="MO0-8Q-luO"/>
                         <outlet property="tableView" destination="Hnb-73-o0y" id="blQ-u1-7ag"/>
@@ -186,6 +193,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DN6-g6-OS8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2118.840579710145" y="135.9375"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="PLf-0A-wfz">
+            <objects>
+                <viewController id="ahh-Dc-ZeQ" customClass="ARViewController" customModule="SwiftyProtein" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="L2M-iA-P0a">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEE-FP-4GK">
+                                <rect key="frame" x="0.0" y="88" width="414" height="788"/>
+                            </arscnView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="oEE-FP-4GK" firstAttribute="leading" secondItem="RmX-AP-tNc" secondAttribute="leading" id="Kio-D1-qdg"/>
+                            <constraint firstAttribute="bottom" secondItem="oEE-FP-4GK" secondAttribute="bottom" constant="20" symbolic="YES" id="Nmi-U0-Veg"/>
+                            <constraint firstItem="oEE-FP-4GK" firstAttribute="top" secondItem="RmX-AP-tNc" secondAttribute="top" id="Xk4-hx-GMe"/>
+                            <constraint firstItem="oEE-FP-4GK" firstAttribute="trailing" secondItem="RmX-AP-tNc" secondAttribute="trailing" id="vIK-Hw-tqM"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="RmX-AP-tNc"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="QOA-5X-bR4"/>
+                    <connections>
+                        <outlet property="sceneView" destination="oEE-FP-4GK" id="cdM-AH-VO3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Dcj-ki-AgM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2831.8840579710145" y="135.9375"/>
         </scene>
     </scenes>
     <resources>

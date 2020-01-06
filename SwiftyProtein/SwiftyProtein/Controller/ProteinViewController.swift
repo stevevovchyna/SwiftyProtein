@@ -8,12 +8,14 @@
 
 import UIKit
 import SceneKit
+import AVFoundation
 
 class ProteinViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     var ligandToDisplay: Ligand?
     var ligandInfo : [LigandInfo] = []
+    var ligandScene : SCNNode?
     @IBOutlet weak var sceneView: SCNView!
     
     var geometryNode: SCNNode = SCNNode()
@@ -24,6 +26,7 @@ class ProteinViewController: UIViewController {
         tableView.separatorStyle = .none
         sceneSetup()
         geometryNode = Atoms.addLigandAtoms(ligand: ligandToDisplay!)
+        ligandScene = geometryNode
         sceneView.scene!.rootNode.addChildNode(geometryNode)
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
         sceneView.addGestureRecognizer(tap)
@@ -72,10 +75,35 @@ class ProteinViewController: UIViewController {
         sceneView.scene = scene
     }
     
+    @IBAction func showAR(_ sender: UIBarButtonItem) {
+        if AVCaptureDevice.authorizationStatus(for: .video) ==  .authorized {
+            performSegue(withIdentifier: "showAR", sender: self)
+        } else {
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
+                if granted {
+                    self.performSegue(withIdentifier: "showAR", sender: self)
+                } else {
+                    self.presentAlert(text: "No camera Access")
+                }
+            })
+        }
+        performSegue(withIdentifier: "showAR", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as! ARViewController
+        vc.ligandScene = ligandScene
+    }
+    
+    func presentAlert(text: String) {
+        let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }
 
 extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
