@@ -10,66 +10,155 @@ import UIKit
 import ARKit
 import SceneKit
 
-class ARViewController: UIViewController {
+class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
-    var ligandScene : SCNNode?
+    @IBOutlet weak var sessionInfoView: UIView!
+    @IBOutlet weak var sessionInfoLabel: UILabel!
+    
+    
+    var ligandToDisplay: Ligand?
+    var geometryNode: SCNNode = SCNNode()
+    var ligandNode: SCNNode = SCNNode()
+    var planes = [SCNNode:SCNNode]()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let ligand = ligandScene else { return }
-        sceneView.scene.rootNode.addChildNode(ligand)
+        sceneView.delegate = self
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
+//        guard let ligand = ligandToDisplay else { return }
+//        geometryNode = Atoms.addLigandAtoms(ligand: ligand)
+//        geometryNode.physicsBody?.type = .kinematic
+//        sceneView.scene.rootNode.addChildNode(geometryNode)
+//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap(withGestureRecognizer:)))
+//        sceneView.addGestureRecognizer(tapGestureRecognizer)
+    }
 
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap(withGestureRecognizer:)))
-        sceneView.addGestureRecognizer(tapGestureRecognizer)
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
         let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
         sceneView.session.run(configuration)
+        sceneView.session.delegate = self
+        UIApplication.shared.isIdleTimerDisabled = true
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
     }
     
-    func addBox() {
-        let box = SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0)
-        
-        let boxNode = SCNNode()
-        boxNode.geometry = box
-        boxNode.position = SCNVector3(0, 0, -0.2)
-        
-        sceneView.scene.rootNode.addChildNode(boxNode)
+    /// - Tag: PlaceARContent
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+        let plane = Plane(anchor: planeAnchor, in: sceneView)
+        node.addChildNode(plane)
+    }
+
+    /// - Tag: UpdateARContent
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let planeAnchor = anchor as? ARPlaneAnchor,
+            let plane = node.childNodes.first as? Plane
+            else { return }
+        if let planeGeometry = plane.meshNode.geometry as? ARSCNPlaneGeometry {
+            planeGeometry.update(from: planeAnchor.geometry)
+        }
+        if let extentGeometry = plane.extentNode.geometry as? SCNPlane {
+            extentGeometry.width = CGFloat(planeAnchor.extent.x)
+            extentGeometry.height = CGFloat(planeAnchor.extent.z)
+            plane.extentNode.simdPosition = planeAnchor.center
+        }
+        if #available(iOS 12.0, *),
+            let classificationNode = plane.classificationNode,
+            let classificationGeometry = classificationNode.geometry as? SCNText {
+            let currentClassification = planeAnchor.classification.description
+            if let oldClassification = classificationGeometry.string as? String, oldClassification != currentClassification {
+                classificationGeometry.string = currentClassification
+                classificationNode.centerAlign()
+            }
+        }        
+    }
+
+    // MARK: - ARSessionDelegate
+
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        guard let frame = session.currentFrame else { return }
+        updateSessionInfoLabel(for: frame, trackingState: frame.camera.trackingState)
+    }
+
+    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        guard let frame = session.currentFrame else { return }
+        updateSessionInfoLabel(for: frame, trackingState: frame.camera.trackingState)
+    }
+
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        updateSessionInfoLabel(for: session.currentFrame!, trackingState: camera.trackingState)
     }
     
-    @objc func didTap(withGestureRecognizer recognizer: UIGestureRecognizer) {
-        let tapLocation = recognizer.location(in: sceneView)
-        let hitTestResults = sceneView.hitTest(tapLocation)
-        guard let node = hitTestResults.first?.node else { return }
-        node.removeFromParentNode()
-    }
+    // MARK: - ARSessionObserver
 
-}
-
-extension ARViewController: ARSKViewDelegate {
-    func session(_ session: ARSession,
-               didFailWithError error: Error) {
-        print("Session Failed - probably due to lack of camera access")
-    }
-  
     func sessionWasInterrupted(_ session: ARSession) {
-        print("Session interrupted")
+        sessionInfoLabel.text = "Session was interrupted"
     }
-  
+
     func sessionInterruptionEnded(_ session: ARSession) {
-        print("Session resumed")
-        sceneView.session.run(session.configuration!,
-                        options: [.resetTracking,
-                                  .removeExistingAnchors])
+        sessionInfoLabel.text = "Session interruption ended"
+        resetTracking()
+    }
+    
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        sessionInfoLabel.text = "Session failed: \(error.localizedDescription)"
+        guard error is ARError else { return }
+        
+        let errorWithInfo = error as NSError
+        let messages = [
+            errorWithInfo.localizedDescription,
+            errorWithInfo.localizedFailureReason,
+            errorWithInfo.localizedRecoverySuggestion
+        ]
+        
+        let errorMessage = messages.compactMap({ $0 }).joined(separator: "\n")
+        
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: "The AR session failed.", message: errorMessage, preferredStyle: .alert)
+            let restartAction = UIAlertAction(title: "Restart Session", style: .default) { _ in
+                alertController.dismiss(animated: true, completion: nil)
+                self.resetTracking()
+            }
+            alertController.addAction(restartAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: - Private methods
+
+    private func updateSessionInfoLabel(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
+        let message: String
+
+        switch trackingState {
+        case .normal where frame.anchors.isEmpty:
+            message = "Move the device around to detect horizontal and vertical surfaces."
+        case .notAvailable:
+            message = "Tracking unavailable."
+        case .limited(.excessiveMotion):
+            message = "Tracking limited - Move the device more slowly."
+        case .limited(.insufficientFeatures):
+            message = "Tracking limited - Point the device at an area with visible surface detail, or improve lighting conditions."
+        case .limited(.initializing):
+            message = "Initializing AR session."
+        default:
+            message = ""
+        }
+        sessionInfoLabel.text = message
+        sessionInfoView.isHidden = message.isEmpty
+        print(sessionInfoView.isHidden)
+    }
+
+    private func resetTracking() {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
 }

@@ -20,6 +20,9 @@
 		10C1ACE223B04D76008B16C7 /* LigandsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACE123B04D76008B16C7 /* LigandsList.swift */; };
 		10C1ACE423B0D66C008B16C7 /* ProteinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACE323B0D66C008B16C7 /* ProteinViewController.swift */; };
 		10C1ACE623B0D746008B16C7 /* Ligand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C1ACE523B0D746008B16C7 /* Ligand.swift */; };
+		10CD651923C4B00400A7CF1C /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CD651823C4B00400A7CF1C /* Plane.swift */; };
+		10CD651B23C4B26C00A7CF1C /* Assets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 10CD651A23C4B26C00A7CF1C /* Assets.scnassets */; };
+		10CD651D23C4B32700A7CF1C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CD651C23C4B32700A7CF1C /* Utils.swift */; };
 		10DD247D23C0ECE1000056E3 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DD247C23C0ECE1000056E3 /* Networking.swift */; };
 		10DD248023C25C4D000056E3 /* LigandInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DD247E23C25C4D000056E3 /* LigandInfoTableViewCell.swift */; };
 		10DD248123C25C4D000056E3 /* LigandInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 10DD247F23C25C4D000056E3 /* LigandInfoTableViewCell.xib */; };
@@ -41,6 +44,9 @@
 		10C1ACE123B04D76008B16C7 /* LigandsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LigandsList.swift; sourceTree = "<group>"; };
 		10C1ACE323B0D66C008B16C7 /* ProteinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinViewController.swift; sourceTree = "<group>"; };
 		10C1ACE523B0D746008B16C7 /* Ligand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ligand.swift; sourceTree = "<group>"; };
+		10CD651823C4B00400A7CF1C /* Plane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
+		10CD651A23C4B26C00A7CF1C /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
+		10CD651C23C4B32700A7CF1C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		10DD247C23C0ECE1000056E3 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		10DD247E23C25C4D000056E3 /* LigandInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LigandInfoTableViewCell.swift; sourceTree = "<group>"; };
 		10DD247F23C25C4D000056E3 /* LigandInfoTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LigandInfoTableViewCell.xib; sourceTree = "<group>"; };
@@ -83,6 +89,7 @@
 				10C1ACDD23B0378A008B16C7 /* View */,
 				10C1ACDE23B03795008B16C7 /* Controller */,
 				10C1ACD023B03107008B16C7 /* Assets.xcassets */,
+				10CD651A23C4B26C00A7CF1C /* Assets.scnassets */,
 				10C1ACD523B03107008B16C7 /* Info.plist */,
 			);
 			path = SwiftyProtein;
@@ -117,6 +124,8 @@
 				10C1ACE523B0D746008B16C7 /* Ligand.swift */,
 				102F0F7023B568C600ACDFC2 /* SceneMethods.swift */,
 				10DD247C23C0ECE1000056E3 /* Networking.swift */,
+				10CD651823C4B00400A7CF1C /* Plane.swift */,
+				10CD651C23C4B32700A7CF1C /* Utils.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -180,6 +189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10C1ACD423B03107008B16C7 /* LaunchScreen.storyboard in Resources */,
+				10CD651B23C4B26C00A7CF1C /* Assets.scnassets in Resources */,
 				10C1ACD123B03107008B16C7 /* Assets.xcassets in Resources */,
 				10DD248123C25C4D000056E3 /* LigandInfoTableViewCell.xib in Resources */,
 				10C1ACCF23B03102008B16C7 /* Main.storyboard in Resources */,
@@ -196,6 +206,8 @@
 				10C1ACE223B04D76008B16C7 /* LigandsList.swift in Sources */,
 				10DD247D23C0ECE1000056E3 /* Networking.swift in Sources */,
 				102F0F7123B568C600ACDFC2 /* SceneMethods.swift in Sources */,
+				10CD651D23C4B32700A7CF1C /* Utils.swift in Sources */,
+				10CD651923C4B00400A7CF1C /* Plane.swift in Sources */,
 				1074B31A23C2A7CD00CE1EA8 /* ARViewController.swift in Sources */,
 				10C1ACDC23B0377E008B16C7 /* LoginViewController.swift in Sources */,
 				10C1ACCC23B03102008B16C7 /* ViewController.swift in Sources */,
@@ -280,7 +292,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -334,7 +346,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

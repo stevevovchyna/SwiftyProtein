@@ -15,7 +15,6 @@ class ProteinViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var ligandToDisplay: Ligand?
     var ligandInfo : [LigandInfo] = []
-    var ligandScene : SCNNode?
     @IBOutlet weak var sceneView: SCNView!
     
     var geometryNode: SCNNode = SCNNode()
@@ -25,8 +24,8 @@ class ProteinViewController: UIViewController {
         tableView.register(UINib(nibName: "LigandInfoTableViewCell", bundle: nil), forCellReuseIdentifier: "ligandInfo")
         tableView.separatorStyle = .none
         sceneSetup()
-        geometryNode = Atoms.addLigandAtoms(ligand: ligandToDisplay!)
-        ligandScene = geometryNode
+        guard let ligand = ligandToDisplay else { return }
+        geometryNode = Atoms.addLigandAtoms(ligand: ligand)
         sceneView.scene!.rootNode.addChildNode(geometryNode)
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
         sceneView.addGestureRecognizer(tap)
@@ -92,7 +91,7 @@ class ProteinViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as! ARViewController
-        vc.ligandScene = ligandScene
+        vc.ligandToDisplay = ligandToDisplay
     }
     
     func presentAlert(text: String) {

@@ -13,44 +13,13 @@ import SceneKit
 class Atoms {
     class func addLigandAtoms(ligand: Ligand) -> SCNNode {
         let liganeMolecule = SCNNode()
+        liganeMolecule.physicsBody?.type = .static
+        liganeMolecule.name = "ligand"
         for atom in ligand.allAtoms {
             let sphere = SCNSphere(radius: 0.2)
-            switch atom.atom_name {
-            case "C":
-                sphere.firstMaterial?.diffuse.contents = UIColor.black
-            case "H":
-                sphere.firstMaterial?.diffuse.contents = UIColor.white
-            case "N":
-                sphere.firstMaterial?.diffuse.contents = UIColor.blue
-            case "O":
-                sphere.firstMaterial?.diffuse.contents = UIColor.red
-            case "F", "Cl":
-                sphere.firstMaterial?.diffuse.contents = UIColor.green
-            case "Br":
-                sphere.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.1921568662, green: 0.007843137719, blue: 0.09019608051, alpha: 1)
-            case "I":
-                sphere.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.09019608051, green: 0, blue: 0.3019607961, alpha: 1)
-            case "He", "Ne", "Ar", "Xe", "Kr":
-                sphere.firstMaterial?.diffuse.contents = UIColor.cyan
-            case "P":
-                sphere.firstMaterial?.diffuse.contents = UIColor.orange
-            case "S":
-                sphere.firstMaterial?.diffuse.contents = UIColor.yellow
-            case "B":
-                sphere.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)
-            case "Li", "Na", "K", "Rb", "Cs", "Fr":
-                sphere.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)
-            case "Be", "Mg", "Ca", "Sr", "Ba", "Ra":
-                sphere.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1)
-            case "Fe":
-                sphere.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
-            case "Ti":
-                sphere.firstMaterial?.diffuse.contents = UIColor.gray
-            default:
-                sphere.firstMaterial?.diffuse.contents = UIColor.systemPink
-            }
+            sphere.firstMaterial?.diffuse.contents = getAtomColor(name: atom.atom_name)
             let sphereNode = SCNNode(geometry: sphere)
-            sphereNode.position = SCNVector3(x: atom.xPos, y: atom.yPos, z: atom.zPos)
+            sphereNode.position = SCNVector3(x: atom.xPos, y: atom.yPos, z: atom.zPos - 20)
             sphereNode.name = atom.atom_name
             liganeMolecule.addChildNode(sphereNode)
         }
@@ -59,12 +28,49 @@ class Atoms {
                 let newBond = SCNNode()
                 let startAtom = ligand.allAtoms[bonds.id - 1]
                 let endAtom = ligand.allAtoms[bond - 1]
-                let startVector = SCNVector3(x: startAtom.xPos, y: startAtom.yPos, z: startAtom.zPos)
-                let endVector = SCNVector3(x: endAtom.xPos, y: endAtom.yPos, z: endAtom.zPos)
+                let startVector = SCNVector3(x: startAtom.xPos, y: startAtom.yPos, z: startAtom.zPos - 20)
+                let endVector = SCNVector3(x: endAtom.xPos, y: endAtom.yPos, z: endAtom.zPos - 20)
                 liganeMolecule.addChildNode(newBond.buildConect(from: startVector, to: endVector, radius: 0.05, color: .black))
             }
         }
         return liganeMolecule
+    }
+    
+    static func getAtomColor(name: String) -> UIColor {
+        switch name {
+        case "C":
+            return UIColor.black
+        case "H":
+            return UIColor.white
+        case "N":
+            return UIColor.blue
+        case "O":
+            return UIColor.red
+        case "F", "Cl":
+            return UIColor.green
+        case "Br":
+            return #colorLiteral(red: 0.1921568662, green: 0.007843137719, blue: 0.09019608051, alpha: 1)
+        case "I":
+            return #colorLiteral(red: 0.09019608051, green: 0, blue: 0.3019607961, alpha: 1)
+        case "He", "Ne", "Ar", "Xe", "Kr":
+            return UIColor.cyan
+        case "P":
+            return UIColor.orange
+        case "S":
+            return UIColor.yellow
+        case "B":
+            return #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)
+        case "Li", "Na", "K", "Rb", "Cs", "Fr":
+            return #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)
+        case "Be", "Mg", "Ca", "Sr", "Ba", "Ra":
+            return #colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1)
+        case "Fe":
+            return #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
+        case "Ti":
+            return UIColor.gray
+        default:
+            return UIColor.systemPink
+        }
     }
 }
 

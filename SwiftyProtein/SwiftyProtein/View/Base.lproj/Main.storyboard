@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kMX-3D-jDh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kMX-3D-jDh">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -203,14 +203,47 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEE-FP-4GK">
-                                <rect key="frame" x="0.0" y="88" width="414" height="788"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                             </arscnView>
+                            <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ct8-l3-8aD">
+                                <rect key="frame" x="20" y="804" width="191" height="38"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="KMG-lG-sDf">
+                                    <rect key="frame" x="0.0" y="0.0" width="191" height="38"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing AR session." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVA-lW-gWB">
+                                            <rect key="frame" x="8" y="8" width="169" height="22"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="22" id="fUR-CW-J20"/>
+                                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="lQg-KA-cFi"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="NVA-lW-gWB" secondAttribute="bottom" constant="8" id="0su-Iq-Voy"/>
+                                        <constraint firstAttribute="trailing" secondItem="NVA-lW-gWB" secondAttribute="trailing" constant="14" id="7gs-Mq-Qgu"/>
+                                        <constraint firstItem="NVA-lW-gWB" firstAttribute="top" secondItem="KMG-lG-sDf" secondAttribute="top" constant="8" id="iHi-F1-UR9"/>
+                                        <constraint firstItem="NVA-lW-gWB" firstAttribute="leading" secondItem="KMG-lG-sDf" secondAttribute="leading" constant="8" id="q1m-bY-s0k"/>
+                                    </constraints>
+                                </view>
+                                <blurEffect style="light"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="7"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="oEE-FP-4GK" firstAttribute="leading" secondItem="RmX-AP-tNc" secondAttribute="leading" id="Kio-D1-qdg"/>
-                            <constraint firstAttribute="bottom" secondItem="oEE-FP-4GK" secondAttribute="bottom" constant="20" symbolic="YES" id="Nmi-U0-Veg"/>
+                            <constraint firstAttribute="bottom" secondItem="oEE-FP-4GK" secondAttribute="bottom" id="Nmi-U0-Veg"/>
                             <constraint firstItem="oEE-FP-4GK" firstAttribute="top" secondItem="RmX-AP-tNc" secondAttribute="top" id="Xk4-hx-GMe"/>
+                            <constraint firstItem="RmX-AP-tNc" firstAttribute="bottom" secondItem="ct8-l3-8aD" secondAttribute="bottom" constant="20" id="gUl-vC-hbA"/>
+                            <constraint firstItem="ct8-l3-8aD" firstAttribute="leading" secondItem="RmX-AP-tNc" secondAttribute="leading" constant="20" id="qyf-eB-QQ8"/>
                             <constraint firstItem="oEE-FP-4GK" firstAttribute="trailing" secondItem="RmX-AP-tNc" secondAttribute="trailing" id="vIK-Hw-tqM"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RmX-AP-tNc"/>
@@ -218,6 +251,8 @@
                     <navigationItem key="navigationItem" id="QOA-5X-bR4"/>
                     <connections>
                         <outlet property="sceneView" destination="oEE-FP-4GK" id="cdM-AH-VO3"/>
+                        <outlet property="sessionInfoLabel" destination="NVA-lW-gWB" id="mFr-Hz-s6O"/>
+                        <outlet property="sessionInfoView" destination="ct8-l3-8aD" id="2dd-Fr-enf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dcj-ki-AgM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
