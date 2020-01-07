@@ -34,10 +34,16 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap(withGestureRecognizer:)))
 //        sceneView.addGestureRecognizer(tapGestureRecognizer)
     }
-
+    @IBAction func refreshScene(_ sender: UIBarButtonItem) {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
+        self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        self.sceneView.session.delegate = self
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         sceneView.session.run(configuration)
@@ -153,7 +159,6 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         }
         sessionInfoLabel.text = message
         sessionInfoView.isHidden = message.isEmpty
-        print(sessionInfoView.isHidden)
     }
 
     private func resetTracking() {

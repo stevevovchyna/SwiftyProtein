@@ -248,7 +248,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RmX-AP-tNc"/>
                     </view>
-                    <navigationItem key="navigationItem" id="QOA-5X-bR4"/>
+                    <navigationItem key="navigationItem" id="QOA-5X-bR4">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="1lv-LR-342">
+                            <connections>
+                                <action selector="refreshScene:" destination="ahh-Dc-ZeQ" id="PTV-Gz-7kM"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="sceneView" destination="oEE-FP-4GK" id="cdM-AH-VO3"/>
                         <outlet property="sessionInfoLabel" destination="NVA-lW-gWB" id="mFr-Hz-s6O"/>
