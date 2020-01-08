@@ -65,11 +65,12 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         if let node = hitTestResults.first?.node {
             if let plane = node.parent as? Plane,
                 let planeParent = plane.parent,
-                let ligandData = ligandToDisplay,
+                let liganda = ligandToDisplay,
                 ligandAddedToScene == false {
-                    let ligand = createARLigand(with: ligandData)
+                
+                let ligand = liganda.createARLigandNode()
                     planeParent.addChildNode(ligand)
-                    sessionInfoLabel.text = "Here's your \(ligandData.name)"
+                sessionInfoLabel.text = "Here's your \(liganda.name)"
                     sessionInfoView.isHidden = false
                     ligandAddedToScene = true
             } else if !ligandAddedToScene {

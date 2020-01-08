@@ -8,45 +8,6 @@
 
 import ARKit
 
-@available(iOS 12.0, *)
-extension ARPlaneAnchor.Classification {
-    var description: String {
-        switch self {
-        case .wall:
-            return "Wall"
-        case .floor:
-            return "Floor"
-        case .ceiling:
-            return "Ceiling"
-        case .table:
-            return "Table"
-        case .seat:
-            return "Seat"
-        case .none(.unknown):
-            return "Unknown"
-        default:
-            return ""
-        }
-    }
-}
-
-extension SCNNode {
-    func centerAlign() {
-        let (min, max) = boundingBox
-        let extents = SIMD3<Float>(max) - SIMD3<Float>(min)
-        simdPivot = float4x4(translation: ((extents / 2) + SIMD3<Float>(min)))
-    }
-}
-
-extension float4x4 {
-    init(translation vector: SIMD3<Float>) {
-        self.init(SIMD4<Float>(1, 0, 0, 0),
-                  SIMD4<Float>(0, 1, 0, 0),
-                  SIMD4<Float>(0, 0, 1, 0),
-                  SIMD4<Float>(vector.x, vector.y, vector.z, 1))
-    }
-}
-
 extension SCNNode {
 
     func normalizeVector(_ iv: SCNVector3) -> SCNVector3 {
@@ -122,3 +83,15 @@ extension SCNNode {
     }
 }
 
+func presentAlert(text: String, in view: UIViewController) {
+    let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: nil))
+    view.present(alert, animated: true, completion: nil)
+}
+
+func changeTableViewAcessibility(toActive trigger: Bool, forRowAt row : IndexPath, in tableView: UITableView, in status: UIActivityIndicatorView) {
+    status.isHidden = trigger
+    trigger ? status.stopAnimating() : status.startAnimating()
+    if trigger { tableView.deselectRow(at: row, animated: true) }
+    tableView.isUserInteractionEnabled = trigger
+}

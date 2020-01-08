@@ -14,7 +14,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var ligands : [String] = ligandsArray
     var ligandToPass : Ligand?
-    var infoToPass : [LigandInfo] = []
     let status = UIActivityIndicatorView()
     
     @IBOutlet weak var tableView: UITableView!
@@ -22,8 +21,10 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var searchBar: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         status.frame = CGRect(x: view.frame.size.width / 2, y:  view.frame.size.height / 2, width: 30, height: 30)
         status.style = .large
+        
         self.view.addSubview(status)
     }
     
@@ -50,23 +51,24 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        changeTableViewAcessibility(toActive: false, forRowAt: indexPath)
+        changeTableViewAcessibility(toActive: false, forRowAt: indexPath, in: tableView, in: status)
         requestLigand(forLigand: ligands[indexPath.row], atIndex: indexPath.row){ resultLigand in
             switch resultLigand {
             case .error(let err):
-                self.presentAlert(text: err)
-                self.changeTableViewAcessibility(toActive: true, forRowAt: indexPath)
+                presentAlert(text: err, in: self)
+                changeTableViewAcessibility(toActive: true, forRowAt: indexPath, in: tableView, in: self.status)
             case .success(let ligandOut):
                 requestLigandInfo(forLigand: self.ligands[indexPath.row]){ resultInfo in
                     DispatchQueue.main.async {
                         switch resultInfo {
-                        case .error(let err):
-                            self.presentAlert(text: err)
-                            self.changeTableViewAcessibility(toActive: true, forRowAt: indexPath)
-                        case .success(let ligandInfoOut):
-                            self.infoToPass = ligandInfoOut
+                        case .error:
                             self.ligandToPass = ligandOut
-                            self.changeTableViewAcessibility(toActive: true, forRowAt: indexPath)
+                            changeTableViewAcessibility(toActive: true, forRowAt: indexPath, in: tableView, in: self.status)
+                            self.performSegue(withIdentifier: "showLigand", sender: self)
+                        case .success(let ligandInfo):
+                            self.ligandToPass = ligandOut
+                            self.ligandToPass?.addInfo(with: ligandInfo[0])
+                            changeTableViewAcessibility(toActive: true, forRowAt: indexPath, in: tableView, in: self.status)
                             self.performSegue(withIdentifier: "showLigand", sender: self)
                         }
                     }
@@ -79,7 +81,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         if segue.identifier == "showLigand" {
             let vc = segue.destination as! ProteinViewController
             vc.ligandToDisplay = ligandToPass
-            vc.ligandInfo = infoToPass
         }
     }
 
@@ -96,18 +97,5 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             ligands = ligandsArray.filter { $0.lowercased().contains(searchText.lowercased()) }
             tableView.reloadData()
         }
-    }
-    
-    func presentAlert(text: String) {
-        let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    func changeTableViewAcessibility(toActive trigger: Bool, forRowAt row : IndexPath) {
-        status.isHidden = trigger
-        trigger ? status.stopAnimating() : status.startAnimating()
-        if trigger { tableView.deselectRow(at: row, animated: true) }
-        tableView.isUserInteractionEnabled = trigger
     }
 }

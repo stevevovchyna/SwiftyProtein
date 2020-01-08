@@ -13,20 +13,21 @@ import AVFoundation
 class ProteinViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    var ligandToDisplay: Ligand?
-    var ligandInfo : [LigandInfo] = []
     @IBOutlet weak var sceneView: SCNView!
     
-    var geometryNode: SCNNode = SCNNode()
+    var ligandToDisplay: Ligand?
+    var ligandNode: SCNNode = SCNNode()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "LigandInfoTableViewCell", bundle: nil), forCellReuseIdentifier: "ligandInfo")
         tableView.separatorStyle = .none
         sceneSetup()
+        
         guard let ligand = ligandToDisplay else { return }
-        geometryNode = addLigandAtoms(ligand: ligand)
-        sceneView.scene!.rootNode.addChildNode(geometryNode)
+        ligandNode = ligand.createLigandNode()
+        sceneView.scene!.rootNode.addChildNode(ligandNode)
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
         sceneView.addGestureRecognizer(tap)
     }
@@ -82,24 +83,16 @@ class ProteinViewController: UIViewController {
                 if granted {
                     self.performSegue(withIdentifier: "showAR", sender: self)
                 } else {
-                    self.presentAlert(text: "No camera Access")
+                    presentAlert(text: "No camera Access", in: self)
                 }
             })
         }
-        performSegue(withIdentifier: "showAR", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as! ARViewController
         vc.ligandToDisplay = ligandToDisplay
     }
-    
-    func presentAlert(text: String) {
-        let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
 }
 
 extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
@@ -109,36 +102,42 @@ extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath) as! LigandInfoTableViewCell
-        cell.ligandNameLabel.text = "Name"
-        cell.ligandName.text = ligandInfo[0].name
-        cell.identifiersLabel.text = "Identifiers"
-        cell.identifiers.text = ligandInfo[0].identifiers
-        cell.formulaLabel.text = "Formula"
-        cell.formula.text = ligandInfo[0].formula
-        cell.molecularWeightLabel.text = "Molecular Weight"
-        cell.molecularWeight.text = ligandInfo[0].formulaWeight
-        cell.typeLabel.text = "Type"
-        cell.type.text = ligandInfo[0].type
-        cell.isometricSmilesLabel.text = "Isometric Smiles"
-        cell.isometricSmiles.text = ligandInfo[0].smiles
-        cell.InChlLabel.text = "InChl"
-        cell.InChl.text = ligandInfo[0].inchi
-        cell.InChIKeyLabel.text = "InChl Key"
-        cell.InChIKey.text = ligandInfo[0].inchiKey
-        cell.formalChargeLabel.text = "Formal Charge"
-        cell.formalCharge.text = ligandInfo[0].formalCharge
-        cell.atomCountLabel.text = "Atom Count"
-        cell.atomCount.text = ligandInfo[0].atomCount
-        cell.chiralAtomCountLabel.text = "Chiral Atom Count"
-        cell.chiralAtomCount.text = ligandInfo[0].chiralAtomCount
-        cell.chiralAtomsLabel.text = "Chiral Atoms"
-        cell.chiralAtoms.text = ligandInfo[0].chiralAtomsStr
-        cell.boundCountLabel.text = "Bound Count"
-        cell.boundCount.text = ligandInfo[0].bondCount
-        cell.aromaticBoundCountLabel.text = "Aromatic Bound Count"
-        cell.aromaticBoundCount.text = ligandInfo[0].aromaticBondCount
-        return cell
+        if let info = ligandToDisplay?.info {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath) as! LigandInfoTableViewCell
+            cell.ligandNameLabel.text = "Name"
+            cell.ligandName.text = info.name
+            cell.identifiersLabel.text = "Identifiers"
+            cell.identifiers.text = info.identifiers
+            cell.formulaLabel.text = "Formula"
+            cell.formula.text = info.formula
+            cell.molecularWeightLabel.text = "Molecular Weight"
+            cell.molecularWeight.text = info.formulaWeight
+            cell.typeLabel.text = "Type"
+            cell.type.text = info.type
+            cell.isometricSmilesLabel.text = "Isometric Smiles"
+            cell.isometricSmiles.text = info.smiles
+            cell.InChlLabel.text = "InChl"
+            cell.InChl.text = info.inchi
+            cell.InChIKeyLabel.text = "InChl Key"
+            cell.InChIKey.text = info.inchiKey
+            cell.formalChargeLabel.text = "Formal Charge"
+            cell.formalCharge.text = info.formalCharge
+            cell.atomCountLabel.text = "Atom Count"
+            cell.atomCount.text = info.atomCount
+            cell.chiralAtomCountLabel.text = "Chiral Atom Count"
+            cell.chiralAtomCount.text = info.chiralAtomCount
+            cell.chiralAtomsLabel.text = "Chiral Atoms"
+            cell.chiralAtoms.text = info.chiralAtomsStr
+            cell.boundCountLabel.text = "Bound Count"
+            cell.boundCount.text = info.bondCount
+            cell.aromaticBoundCountLabel.text = "Aromatic Bound Count"
+            cell.aromaticBoundCount.text = info.aromaticBondCount
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath)
+            cell.textLabel?.text = "No data available"
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
