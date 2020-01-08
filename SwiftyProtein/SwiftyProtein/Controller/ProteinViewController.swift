@@ -134,7 +134,7 @@ extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
             cell.aromaticBoundCount.text = info.aromaticBondCount
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "noDataCell", for: indexPath)
             cell.textLabel?.text = "No data available"
             return cell
         }

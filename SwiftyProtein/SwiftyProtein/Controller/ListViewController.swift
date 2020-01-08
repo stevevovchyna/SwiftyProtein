@@ -52,27 +52,15 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         changeTableViewAcessibility(toActive: false, forRowAt: indexPath, in: tableView, in: status)
-        requestLigand(forLigand: ligands[indexPath.row], atIndex: indexPath.row){ resultLigand in
-            switch resultLigand {
+        requestLigandDataAndInfo(forLigand: ligands[indexPath.row], atIndex: indexPath.row) { result in
+            switch result {
             case .error(let err):
                 presentAlert(text: err, in: self)
                 changeTableViewAcessibility(toActive: true, forRowAt: indexPath, in: tableView, in: self.status)
-            case .success(let ligandOut):
-                requestLigandInfo(forLigand: self.ligands[indexPath.row]){ resultInfo in
-                    DispatchQueue.main.async {
-                        switch resultInfo {
-                        case .error:
-                            self.ligandToPass = ligandOut
-                            changeTableViewAcessibility(toActive: true, forRowAt: indexPath, in: tableView, in: self.status)
-                            self.performSegue(withIdentifier: "showLigand", sender: self)
-                        case .success(let ligandInfo):
-                            self.ligandToPass = ligandOut
-                            self.ligandToPass?.addInfo(with: ligandInfo[0])
-                            changeTableViewAcessibility(toActive: true, forRowAt: indexPath, in: tableView, in: self.status)
-                            self.performSegue(withIdentifier: "showLigand", sender: self)
-                        }
-                    }
-                }
+            case .success(let ligand):
+                self.ligandToPass = ligand
+                changeTableViewAcessibility(toActive: true, forRowAt: indexPath, in: tableView, in: self.status)
+                self.performSegue(withIdentifier: "showLigand", sender: self)
             }
         }
     }
