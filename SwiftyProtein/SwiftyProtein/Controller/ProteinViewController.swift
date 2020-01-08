@@ -22,14 +22,18 @@ class ProteinViewController: UIViewController {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "LigandInfoTableViewCell", bundle: nil), forCellReuseIdentifier: "ligandInfo")
         tableView.separatorStyle = .none
+        
         sceneSetup()
         
-        guard let ligand = ligandToDisplay else { return }
-        ligandNode = ligand.createLigandNode()
-        sceneView.scene!.rootNode.addChildNode(ligandNode)
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
-        sceneView.addGestureRecognizer(tap)
+        if let ligand = ligandToDisplay {
+            ligandNode = ligand.createLigandNode()
+            sceneView.scene!.rootNode.addChildNode(ligandNode)
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
+            sceneView.addGestureRecognizer(tap)
+        } else {
+            presentAlert(text: "There was a problem creating your ligand", in: self)
+        }
     }
     
     @objc func handleTap(rec: UITapGestureRecognizer){
@@ -38,41 +42,10 @@ class ProteinViewController: UIViewController {
             let hits = self.sceneView.hitTest(location, options: nil)
             if !hits.isEmpty {
                 guard let tappedNode = hits.first?.node else { return }
-                let text = SCNText(string: tappedNode.name, extrusionDepth: 2)
-                let material = SCNMaterial()
-                material.diffuse.contents = tappedNode.geometry?.firstMaterial?.diffuse.contents
-                text.materials = [material]
-                let node = SCNNode()
-                let pos = tappedNode.position
-                node.position = SCNVector3(pos.x + 0.05, pos.y + 0.05, pos.z + 0.05)
-                node.scale = SCNVector3(0.05, 0.05, 0.05)
-                node.geometry = text
+                let node = atomNameNode(for: tappedNode)
                 sceneView.scene?.rootNode.addChildNode(node)
             }
         }
-    }
-    
-    func sceneSetup() {
-        let scene = SCNScene()
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light!.type = SCNLight.LightType.ambient
-        ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
-        scene.rootNode.addChildNode(ambientLightNode)
-      
-        let omniLightNode = SCNNode()
-        omniLightNode.light = SCNLight()
-        omniLightNode.light!.type = SCNLight.LightType.omni
-        omniLightNode.light!.color = UIColor(white: 0.75, alpha: 1.0)
-        omniLightNode.position = SCNVector3Make(0, 50, 50)
-        scene.rootNode.addChildNode(omniLightNode)
-      
-        let cameraNode = SCNNode()
-        cameraNode.camera = SCNCamera()
-        cameraNode.position = SCNVector3Make(0, 0, 20)
-        scene.rootNode.addChildNode(cameraNode)
-            
-        sceneView.scene = scene
     }
     
     @IBAction func showAR(_ sender: UIBarButtonItem) {
@@ -142,6 +115,31 @@ extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.cellForRow(at: indexPath)?.isSelected = false
+    }
+}
+
+extension ProteinViewController {
+    func sceneSetup() {
+        let scene = SCNScene()
+        let ambientLightNode = SCNNode()
+        ambientLightNode.light = SCNLight()
+        ambientLightNode.light!.type = SCNLight.LightType.ambient
+        ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
+        scene.rootNode.addChildNode(ambientLightNode)
+      
+        let omniLightNode = SCNNode()
+        omniLightNode.light = SCNLight()
+        omniLightNode.light!.type = SCNLight.LightType.omni
+        omniLightNode.light!.color = UIColor(white: 0.75, alpha: 1.0)
+        omniLightNode.position = SCNVector3Make(0, 50, 50)
+        scene.rootNode.addChildNode(omniLightNode)
+      
+        let cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        cameraNode.position = SCNVector3Make(0, 0, 20)
+        scene.rootNode.addChildNode(cameraNode)
+            
+        sceneView.scene = scene
     }
 }
 
