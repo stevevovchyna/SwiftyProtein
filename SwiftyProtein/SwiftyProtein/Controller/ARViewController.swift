@@ -15,37 +15,29 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var sessionInfoView: UIView!
     @IBOutlet weak var sessionInfoLabel: UILabel!
-    
-    
+        
     var ligandToDisplay: Ligand?
     var geometryNode: SCNNode = SCNNode()
     var ligandNode: SCNNode = SCNNode()
-    var planes = [SCNNode:SCNNode]()
+    var planes = [ARPlaneAnchor: Plane]()
+    var ligandAddedToScene: Bool = false
     
+    // MARK : - View life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.delegate = self
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
-//        guard let ligand = ligandToDisplay else { return }
-//        geometryNode = Atoms.addLigandAtoms(ligand: ligand)
-//        geometryNode.physicsBody?.type = .kinematic
-//        sceneView.scene.rootNode.addChildNode(geometryNode)
-//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap(withGestureRecognizer:)))
-//        sceneView.addGestureRecognizer(tapGestureRecognizer)
-    }
-    @IBAction func refreshScene(_ sender: UIBarButtonItem) {
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
-        self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        self.sceneView.session.delegate = self
-        UIApplication.shared.isIdleTimerDisabled = true
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapScreen))
+        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.numberOfTouchesRequired = 1
+        self.view.addGestureRecognizer(tapRecognizer)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
+        configuration.planeDetection = [.horizontal]
         sceneView.session.run(configuration)
         sceneView.session.delegate = self
         UIApplication.shared.isIdleTimerDisabled = true
@@ -56,35 +48,57 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         sceneView.session.pause()
     }
     
-    /// - Tag: PlaceARContent
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        let plane = Plane(anchor: planeAnchor, in: sceneView)
-        node.addChildNode(plane)
+    // MARK : - touch observers
+    
+    @IBAction func refreshScene(_ sender: UIBarButtonItem) {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal]
+        self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        self.sceneView.session.delegate = self
+        UIApplication.shared.isIdleTimerDisabled = true
+        ligandAddedToScene = false
     }
-
-    /// - Tag: UpdateARContent
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor,
-            let plane = node.childNodes.first as? Plane
-            else { return }
-        if let planeGeometry = plane.meshNode.geometry as? ARSCNPlaneGeometry {
-            planeGeometry.update(from: planeAnchor.geometry)
-        }
-        if let extentGeometry = plane.extentNode.geometry as? SCNPlane {
-            extentGeometry.width = CGFloat(planeAnchor.extent.x)
-            extentGeometry.height = CGFloat(planeAnchor.extent.z)
-            plane.extentNode.simdPosition = planeAnchor.center
-        }
-        if #available(iOS 12.0, *),
-            let classificationNode = plane.classificationNode,
-            let classificationGeometry = classificationNode.geometry as? SCNText {
-            let currentClassification = planeAnchor.classification.description
-            if let oldClassification = classificationGeometry.string as? String, oldClassification != currentClassification {
-                classificationGeometry.string = currentClassification
-                classificationNode.centerAlign()
+    
+    @objc func didTapScreen(recognizer: UITapGestureRecognizer) {
+        let tapLocation = recognizer.location(in: sceneView)
+        let hitTestResults = sceneView.hitTest(tapLocation)
+        if let node = hitTestResults.first?.node {
+            if let plane = node.parent as? Plane,
+                let planeParent = plane.parent,
+                let ligandData = ligandToDisplay,
+                ligandAddedToScene == false {
+                    let ligand = createARLigand(with: ligandData)
+                    planeParent.addChildNode(ligand)
+                    sessionInfoLabel.text = "Here's your \(ligandData.name)"
+                    sessionInfoView.isHidden = false
+                    ligandAddedToScene = true
+            } else if !ligandAddedToScene {
+                sessionInfoLabel.text = "Seems like this plane is not accessible yet - move your device around or find another surface to be able to add ligand"
+                sessionInfoView.isHidden = false
             }
-        }        
+        }
+    }
+    
+    // MARK : - Tag: render methods
+    
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        DispatchQueue.main.async {
+            if let planeAnchor = anchor as? ARPlaneAnchor, self.ligandAddedToScene == false {
+                let plane = Plane(planeAnchor)
+                self.planes[planeAnchor] = plane
+                node.addChildNode(plane)
+            }
+        }
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        DispatchQueue.main.async {
+            if let planeAnchor = anchor as? ARPlaneAnchor,
+                self.ligandAddedToScene == false,
+                let plane = self.planes[planeAnchor] {
+                    plane.update(planeAnchor)
+            }
+        }
     }
 
     // MARK: - ARSessionDelegate
@@ -129,9 +143,9 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: "The AR session failed.", message: errorMessage, preferredStyle: .alert)
-            let restartAction = UIAlertAction(title: "Restart Session", style: .default) { _ in
+            let restartAction = UIAlertAction(title: "Back", style: .default) { _ in
                 alertController.dismiss(animated: true, completion: nil)
-                self.resetTracking()
+                self.navigationController?.popViewController(animated: true)
             }
             alertController.addAction(restartAction)
             self.present(alertController, animated: true, completion: nil)

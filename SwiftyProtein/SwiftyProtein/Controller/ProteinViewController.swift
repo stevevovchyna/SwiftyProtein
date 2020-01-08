@@ -25,7 +25,7 @@ class ProteinViewController: UIViewController {
         tableView.separatorStyle = .none
         sceneSetup()
         guard let ligand = ligandToDisplay else { return }
-        geometryNode = Atoms.addLigandAtoms(ligand: ligand)
+        geometryNode = addLigandAtoms(ligand: ligand)
         sceneView.scene!.rootNode.addChildNode(geometryNode)
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
         sceneView.addGestureRecognizer(tap)
