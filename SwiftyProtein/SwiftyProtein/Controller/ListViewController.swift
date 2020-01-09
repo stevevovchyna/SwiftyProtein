@@ -13,6 +13,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     
     var ligands : [String] = []
+    var allLigands : [String] = []
     var ligandToPass : Ligand?
     let status = UIActivityIndicatorView()
     
@@ -26,6 +27,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch parsedLigands {
         case .success(let ligandsArray):
             ligands = ligandsArray
+            allLigands = ligandsArray
         case .error(let err):
             fatalError(err)
         }
@@ -84,13 +86,13 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText == "" {
-            ligands = ligandsArray
+            ligands = allLigands
             tableView.reloadData()
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
         } else {
-            ligands = ligandsArray.filter { $0.lowercased().contains(searchText.lowercased()) }
+            ligands = allLigands.filter { $0.lowercased().contains(searchText.lowercased()) }
             tableView.reloadData()
         }
     }
