@@ -178,12 +178,19 @@
                         <viewLayoutGuide key="safeArea" id="IdI-wY-x46"/>
                     </view>
                     <navigationItem key="navigationItem" id="55U-mn-TiX">
-                        <barButtonItem key="rightBarButtonItem" title="AR" id="TBL-nD-hbl">
-                            <connections>
-                                <action selector="showAR:" destination="OFa-72-Kv0" id="Nzv-vR-ttL"/>
-                                <segue destination="ahh-Dc-ZeQ" kind="show" identifier="showAR" id="kpe-gk-jmQ"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="AR" id="TBL-nD-hbl">
+                                <connections>
+                                    <action selector="showAR:" destination="OFa-72-Kv0" id="Nzv-vR-ttL"/>
+                                    <segue destination="ahh-Dc-ZeQ" kind="show" identifier="showAR" id="kpe-gk-jmQ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="refresh" id="LTn-W3-5pG">
+                                <connections>
+                                    <action selector="refreshScene:" destination="OFa-72-Kv0" id="rZJ-Xo-Mlw"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="sceneView" destination="c3P-Eb-EuW" id="MO0-8Q-luO"/>

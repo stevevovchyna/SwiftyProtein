@@ -62,6 +62,20 @@ class ProteinViewController: UIViewController {
         }
     }
     
+    @IBAction func refreshScene(_ sender: UIBarButtonItem) {
+        ligandNode = SCNNode()
+        sceneSetup()
+        if let ligand = ligandToDisplay {
+            ligandNode = ligand.createLigandNode()
+            sceneView.scene!.rootNode.addChildNode(ligandNode)
+            let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
+            sceneView.addGestureRecognizer(tap)
+        } else {
+            presentAlert(text: "There was a problem creating your ligand", in: self)
+        }
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as! ARViewController
         vc.ligandToDisplay = ligandToDisplay
