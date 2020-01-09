@@ -8,6 +8,13 @@
 
 import ARKit
 
+extension Double {
+    func rounded(toPlaces places:Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}
+
 func presentAlert(text: String, in view: UIViewController) {
     let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: nil))

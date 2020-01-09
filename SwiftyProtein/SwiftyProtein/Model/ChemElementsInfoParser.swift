@@ -20,7 +20,7 @@ struct Element {
         for el in json {
             if (el["symbol"] as! String).lowercased() == element.lowercased() {
                 name = el["name"] as? String ?? "No data"
-                atomicMass = el["atomic_mass"] as? Double ?? -1
+                atomicMass = (el["atomic_mass"] as? Double ?? -1).rounded(toPlaces: 6)
                 number = el["number"] as? Int ?? -1
                 phase = el["phase"] as? String ?? "No data"
                 summary = el["summary"] as? String ?? "No data"
