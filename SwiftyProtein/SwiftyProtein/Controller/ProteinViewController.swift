@@ -14,6 +14,7 @@ class ProteinViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var sceneView: SCNView!
+    @IBOutlet weak var shareButton: UIButton!
     
     var ligandToDisplay: Ligand?
     var ligandNode: SCNNode = SCNNode()
@@ -22,9 +23,9 @@ class ProteinViewController: UIViewController {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "LigandInfoTableViewCell", bundle: nil), forCellReuseIdentifier: "ligandInfo")
         tableView.separatorStyle = .none
-        
+        shareButton.layer.cornerRadius = 5
+        shareButton.backgroundColor = #colorLiteral(red: 0.6666666865, green: 0.6666666865, blue: 0.6666666865, alpha: 0.7332512842)
         sceneSetup()
-        
         if let ligand = ligandToDisplay {
             self.navigationItem.title = ligand.name
             ligandNode = ligand.createLigandNode()
@@ -61,6 +62,25 @@ class ProteinViewController: UIViewController {
             })
         }
     }
+    
+    @IBAction func shareButtonPressed(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Share your modelization!", message: "Enter any text to share your modelization", preferredStyle: .alert)
+        guard let ligand = ligandToDisplay else { return }
+        alert.addTextField { textField in
+            textField.text = "Check out my vizualization of \(ligand.name)"
+        }
+        alert.addAction(UIAlertAction(title: "Share", style: .default) { [weak alert] (_) in
+            let text = alert?.textFields![0].text
+            let image = self.sceneView.snapshot()
+            var finalArray : [Any] = [image]
+            if text != "" { finalArray.append(text ?? "") }
+            let activityViewController = UIActivityViewController(activityItems: finalArray, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.sceneView
+            self.present(activityViewController, animated: true, completion: nil)
+        })
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     
     @IBAction func refreshScene(_ sender: UIBarButtonItem) {
         ligandNode = SCNNode()

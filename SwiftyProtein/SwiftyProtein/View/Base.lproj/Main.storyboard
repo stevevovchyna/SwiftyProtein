@@ -140,13 +140,40 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mcg-Ti-9fI">
                                 <rect key="frame" x="0.0" y="88" width="414" height="404"/>
                                 <subviews>
-                                    <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" allowsCameraControl="YES" autoenablesDefaultLighting="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c3P-Eb-EuW">
+                                    <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" allowsCameraControl="YES" autoenablesDefaultLighting="YES" preferredRenderingAPI="1" translatesAutoresizingMaskIntoConstraints="NO" id="c3P-Eb-EuW">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="404"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </sceneKitView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qMC-9R-y4V">
+                                        <rect key="frame" x="336" y="8" width="70" height="34"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Asr-kp-FRK">
+                                                <rect key="frame" x="0.0" y="0.0" width="70" height="34"/>
+                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="20"/>
+                                                <state key="normal" title="Share">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="titleShadowColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="shareButtonPressed:" destination="OFa-72-Kv0" eventType="touchUpInside" id="U3F-cU-d9e"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="Asr-kp-FRK" firstAttribute="top" secondItem="qMC-9R-y4V" secondAttribute="top" id="58Q-n2-NIN"/>
+                                            <constraint firstAttribute="trailing" secondItem="Asr-kp-FRK" secondAttribute="trailing" id="Al7-BB-az1"/>
+                                            <constraint firstItem="Asr-kp-FRK" firstAttribute="leading" secondItem="qMC-9R-y4V" secondAttribute="leading" id="Upy-De-2Pf"/>
+                                            <constraint firstAttribute="width" constant="70" id="WtU-Zr-Bk3"/>
+                                            <constraint firstAttribute="height" constant="34" id="mV4-gW-KPN"/>
+                                            <constraint firstAttribute="bottom" secondItem="Asr-kp-FRK" secondAttribute="bottom" id="qMt-Ps-I4D"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
+                                    <constraint firstItem="qMC-9R-y4V" firstAttribute="top" secondItem="Mcg-Ti-9fI" secondAttribute="top" constant="8" id="2Od-Ci-nBz"/>
+                                    <constraint firstAttribute="trailing" secondItem="qMC-9R-y4V" secondAttribute="trailing" constant="8" id="Asn-BE-z8P"/>
                                     <constraint firstItem="c3P-Eb-EuW" firstAttribute="top" secondItem="Mcg-Ti-9fI" secondAttribute="top" id="hbx-7h-bUs"/>
                                     <constraint firstItem="c3P-Eb-EuW" firstAttribute="leading" secondItem="Mcg-Ti-9fI" secondAttribute="leading" id="hwK-EZ-Vzb"/>
                                     <constraint firstAttribute="trailing" secondItem="c3P-Eb-EuW" secondAttribute="trailing" id="kDB-Fm-Rk0"/>
@@ -214,6 +241,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="sceneView" destination="c3P-Eb-EuW" id="MO0-8Q-luO"/>
+                        <outlet property="shareButton" destination="Asr-kp-FRK" id="jiQ-ct-7Lr"/>
                         <outlet property="tableView" destination="Hnb-73-o0y" id="blQ-u1-7ag"/>
                     </connections>
                 </viewController>
