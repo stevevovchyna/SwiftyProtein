@@ -22,6 +22,11 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     var planes = [ARPlaneAnchor: Plane]()
     var ligandAddedToScene: Bool = false
     
+    var currentAngleY: Float = 0.0
+    var isRotating = false
+    var isScaling = false
+    var currentNode: SCNNode? = nil
+    
     // MARK : - View life cycle
     
     override func viewDidLoad() {
@@ -32,6 +37,15 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         tapRecognizer.numberOfTapsRequired = 1
         tapRecognizer.numberOfTouchesRequired = 1
         self.view.addGestureRecognizer(tapRecognizer)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(moveNode(_:)))
+        self.view.addGestureRecognizer(panGesture)
+
+        let rotateGesture = UIRotationGestureRecognizer(target: self, action: #selector(rotateNode(_:)))
+        self.view.addGestureRecognizer(rotateGesture)
+        
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(scaleNode(_:)))
+        self.view.addGestureRecognizer(pinchGesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -69,14 +83,58 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 ligandAddedToScene == false {
                 
                 let ligand = liganda.createARLigandNode()
-                    planeParent.addChildNode(ligand)
+                planeParent.addChildNode(ligand)
                 sessionInfoLabel.text = "Here's your \(liganda.name)"
-                    sessionInfoView.isHidden = false
-                    ligandAddedToScene = true
+                sessionInfoView.isHidden = false
+                ligandAddedToScene = true
+                currentNode = ligand
             } else if !ligandAddedToScene {
                 sessionInfoLabel.text = "Seems like this plane is not accessible yet - move your device around or find another surface to be able to add ligand"
                 sessionInfoView.isHidden = false
             }
+        }
+    }
+    
+    @objc func moveNode(_ gesture: UIPanGestureRecognizer) {
+        guard let currentNode = currentNode, isRotating == false else { return }
+        let currentTouchPoint = gesture.location(in: sceneView)
+        guard let hitTest = sceneView.hitTest(currentTouchPoint, types: .existingPlane).first else { return }
+        let worldTransform = hitTest.localTransform
+        let newPosition = SCNVector3(worldTransform.columns.3.x, worldTransform.columns.3.y, worldTransform.columns.3.z)
+        currentNode.simdPosition = SIMD3<Float>(newPosition.x, newPosition.y, newPosition.z)
+    }
+    
+    @objc func rotateNode(_ gesture: UIRotationGestureRecognizer){
+        guard let currentNode = currentNode else { return }
+        let rotation = Float(gesture.rotation)
+        switch gesture.state {
+        case .changed:
+            isRotating = true
+            currentNode.eulerAngles.y = currentAngleY - rotation
+        case .ended:
+            currentAngleY = currentNode.eulerAngles.y
+            isRotating = false
+        default:
+            isRotating = !isRotating
+            isRotating = !isRotating
+        }
+    }
+    
+    @objc func scaleNode(_ gesture: UIPinchGestureRecognizer) {
+        guard let nodeToScale = currentNode else { return }
+        switch gesture.state {
+        case .changed:
+            isScaling = true
+            let pinchScaleX: CGFloat = gesture.scale * CGFloat((nodeToScale.scale.x))
+            let pinchScaleY: CGFloat = gesture.scale * CGFloat((nodeToScale.scale.y))
+            let pinchScaleZ: CGFloat = gesture.scale * CGFloat((nodeToScale.scale.z))
+            nodeToScale.scale = SCNVector3Make(Float(pinchScaleX), Float(pinchScaleY), Float(pinchScaleZ))
+            gesture.scale = 1
+        case .ended:
+            isScaling = false
+        default:
+            isScaling = !isScaling
+            isScaling = !isScaling
         }
     }
     
