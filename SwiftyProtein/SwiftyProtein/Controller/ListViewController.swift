@@ -12,7 +12,7 @@ import Foundation
 class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     
-    var ligands : [String] = ligandsArray
+    var ligands : [String] = []
     var ligandToPass : Ligand?
     let status = UIActivityIndicatorView()
     
@@ -21,6 +21,14 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var searchBar: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let parsedLigands = parseLigandFile()
+        switch parsedLigands {
+        case .success(let ligandsArray):
+            ligands = ligandsArray
+        case .error(let err):
+            fatalError(err)
+        }
         
         status.frame = CGRect(x: view.frame.size.width / 2, y:  view.frame.size.height / 2, width: 30, height: 30)
         status.style = .large
