@@ -26,6 +26,7 @@ class ProteinViewController: UIViewController {
         sceneSetup()
         
         if let ligand = ligandToDisplay {
+            self.navigationItem.title = ligand.name
             ligandNode = ligand.createLigandNode()
             sceneView.scene!.rootNode.addChildNode(ligandNode)
             let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))

@@ -31,6 +31,9 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let ligand = ligandToDisplay {
+            self.navigationItem.title = ligand.name
+        }
         sceneView.delegate = self
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapScreen))

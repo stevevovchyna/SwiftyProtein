@@ -80,7 +80,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="Azl-34-rUq">
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Type your ligand code here..." translatesAutoresizingMaskIntoConstraints="NO" id="Azl-34-rUq">
                                 <rect key="frame" x="0.0" y="88" width="414" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -118,9 +118,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="vZ8-b3-rjf"/>
                     </view>
-                    <navigationItem key="navigationItem" title="SwiftyProteins" largeTitleDisplayMode="never" id="0aj-0Y-xNP">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="THQ-nQ-bIg"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="SwiftyProteins" largeTitleDisplayMode="never" id="0aj-0Y-xNP"/>
                     <connections>
                         <outlet property="searchBar" destination="Azl-34-rUq" id="ecX-sv-EXR"/>
                         <outlet property="tableView" destination="FFQ-A3-E9E" id="VlM-ce-hDW"/>
