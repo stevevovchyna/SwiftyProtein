@@ -22,7 +22,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var searchBar: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupColor()
         let parsedLigands = parseLigandFile()
         switch parsedLigands {
         case .success(let ligandsArray):
@@ -31,11 +31,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         case .error(let err):
             fatalError(err)
         }
-        
-        status.frame = CGRect(x: view.frame.size.width / 2, y:  view.frame.size.height / 2, width: 30, height: 30)
-        status.style = .large
-        
-        self.view.addSubview(status)
+        addStatusLabel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,6 +53,8 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ligandeCell", for: indexPath)
         cell.textLabel?.text = ligands[indexPath.row]
+        cell.textLabel?.textColor = .black
+        cell.backgroundColor = .clear
         return cell
     }
     
@@ -96,4 +94,22 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             tableView.reloadData()
         }
     }
+}
+
+extension ListViewController {
+    
+    private func addStatusLabel() {
+        status.frame = CGRect(x: (view.frame.size.width - 75) / 2, y:  (view.frame.size.height - 75) / 2, width: 75, height: 75)
+        status.backgroundColor = #colorLiteral(red: 0.8374180198, green: 0.8374378085, blue: 0.8374271393, alpha: 0.3102793237)
+        status.layer.cornerRadius = 10
+        status.style = .large
+        
+        self.view.addSubview(status)
+    }
+    
+    private func setupColor() {
+        self.tableView.backgroundColor = .clear
+        setGradientBackground(forViewController: self.view)
+    }
+    
 }

@@ -16,7 +16,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setGradientBackground(forViewController: self.view)
         let context = LAContext()
         let _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
         let currentImage = context.biometryType == LABiometryType.faceID ? UIImage(named: "faceID") : UIImage(named: "touchID")

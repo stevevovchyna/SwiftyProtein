@@ -23,22 +23,14 @@ class ProteinViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.register(UINib(nibName: "LigandInfoTableViewCell", bundle: nil), forCellReuseIdentifier: "ligandInfo")
         tableView.separatorStyle = .none
-        reloadSceneButton.layer.cornerRadius = 5
-        reloadSceneButton.backgroundColor = #colorLiteral(red: 0.6642242074, green: 0.6642400622, blue: 0.6642315388, alpha: 0.5639447774)
-        showARViewButton.layer.cornerRadius = 5
-        showARViewButton.backgroundColor = #colorLiteral(red: 0.6642242074, green: 0.6642400622, blue: 0.6642315388, alpha: 0.5639447774)
+        
+        viewColorsSetup()
         sceneSetup()
-        if let ligand = ligandToDisplay {
-            self.navigationItem.title = ligand.name
-            ligandNode = ligand.createLigandNode()
-            sceneView.scene!.rootNode.addChildNode(ligandNode)
-            let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
-            sceneView.addGestureRecognizer(tap)
-        } else {
-            presentAlert(text: "There was a problem creating your ligand", in: self)
-        }
+        ligandSetup()
+        
     }
     
     @objc func handleTap(rec: UITapGestureRecognizer){
@@ -71,8 +63,9 @@ class ProteinViewController: UIViewController {
         let alert = UIAlertController(title: "Share your modelization!", message: "Enter any text to share your modelization", preferredStyle: .alert)
         guard let ligand = ligandToDisplay else { return }
         alert.addTextField { textField in
-            textField.text = "Check out my vizualization of \(ligand.name)"
+            textField.text = "Check out my visualization of \(ligand.name)"
         }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Share", style: .default) { [weak alert] (_) in
             let text = alert?.textFields![0].text
             let image = self.sceneView.snapshot()
@@ -113,6 +106,7 @@ extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let info = ligandToDisplay?.info {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath) as! LigandInfoTableViewCell
+            cell.backgroundColor = .clear
             cell.ligandNameLabel.text = "Name"
             cell.ligandName.text = info.name
             cell.identifiersLabel.text = "Identifiers"
@@ -155,7 +149,7 @@ extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension ProteinViewController {
-    func sceneSetup() {
+    private func sceneSetup() {
         let scene = SCNScene()
         let ambientLightNode = SCNNode()
         ambientLightNode.light = SCNLight()
@@ -174,8 +168,34 @@ extension ProteinViewController {
         cameraNode.camera = SCNCamera()
         cameraNode.position = SCNVector3Make(0, 0, 20)
         scene.rootNode.addChildNode(cameraNode)
-            
         sceneView.scene = scene
+        sceneView.backgroundColor = .clear
+    }
+    
+    private func viewColorsSetup() {
+        setGradientBackground(forViewController: self.view)
+        tableView.backgroundColor = .clear
+    
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+
+        self.reloadSceneButton.layer.cornerRadius = 5
+        self.reloadSceneButton.backgroundColor = #colorLiteral(red: 0.6642242074, green: 0.6642400622, blue: 0.6642315388, alpha: 0.25)
+        self.showARViewButton.layer.cornerRadius = 5
+        self.showARViewButton.backgroundColor = #colorLiteral(red: 0.6642242074, green: 0.6642400622, blue: 0.6642315388, alpha: 0.25)
+    }
+    
+    private func ligandSetup() {
+        if let ligand = self.ligandToDisplay {
+            self.navigationItem.title = ligand.name
+            self.ligandNode = ligand.createLigandNode()
+            self.sceneView.scene!.rootNode.addChildNode(ligandNode)
+            let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
+            self.sceneView.addGestureRecognizer(tap)
+        } else {
+            presentAlert(text: "There was a problem creating your ligand", in: self)
+        }
     }
 }
 

@@ -31,24 +31,15 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let ligand = ligandToDisplay {
-            self.navigationItem.title = ligand.name
-        }
+        
+        setupNavBar()
+        
+        if let ligand = ligandToDisplay { self.navigationItem.title = ligand.name }
         sceneView.delegate = self
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapScreen))
-        tapRecognizer.numberOfTapsRequired = 1
-        tapRecognizer.numberOfTouchesRequired = 1
-        self.view.addGestureRecognizer(tapRecognizer)
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(moveNode(_:)))
-        self.view.addGestureRecognizer(panGesture)
-
-        let rotateGesture = UIRotationGestureRecognizer(target: self, action: #selector(rotateNode(_:)))
-        self.view.addGestureRecognizer(rotateGesture)
+        gestureSetup()
         
-        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(scaleNode(_:)))
-        self.view.addGestureRecognizer(pinchGesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -121,8 +112,7 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             currentAngleY = currentNode.eulerAngles.y
             isRotating = false
         default:
-            isRotating = !isRotating
-            isRotating = !isRotating
+            break
         }
     }
     
@@ -139,8 +129,7 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         case .ended:
             isScaling = false
         default:
-            isScaling = !isScaling
-            isScaling = !isScaling
+            break
         }
     }
     
@@ -244,5 +233,28 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+    }
+    
+    private func gestureSetup() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapScreen))
+        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.numberOfTouchesRequired = 1
+        self.view.addGestureRecognizer(tapRecognizer)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(moveNode(_:)))
+        self.view.addGestureRecognizer(panGesture)
+
+        let rotateGesture = UIRotationGestureRecognizer(target: self, action: #selector(rotateNode(_:)))
+        self.view.addGestureRecognizer(rotateGesture)
+        
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(scaleNode(_:)))
+        self.view.addGestureRecognizer(pinchGesture)
+    }
+    
+    private func setupNavBar() {
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.tintColor = .black
     }
 }
