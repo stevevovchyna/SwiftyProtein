@@ -84,7 +84,6 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 let planeParent = plane.parent,
                 let liganda = ligandToDisplay,
                 ligandAddedToScene == false {
-                
                 let ligand = liganda.createARLigandNode()
                 planeParent.addChildNode(ligand)
                 sessionInfoLabel.text = "Here's your \(liganda.name)"
@@ -94,6 +93,10 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             } else if !ligandAddedToScene {
                 sessionInfoLabel.text = "Seems like this plane is not accessible yet - move your device around or find another surface to be able to add ligand"
                 sessionInfoView.isHidden = false
+            }
+            if node.name != nil, let parent = currentNode {
+                let newNode = atomNameNode(for: node)
+                parent.addChildNode(newNode)
             }
         }
     }
