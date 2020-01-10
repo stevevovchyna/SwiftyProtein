@@ -42,13 +42,13 @@ class LigandInfoTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        let labelsArray = [ligandNameLabel, identifiersLabel, formulaLabel, molecularWeightLabel, typeLabel, isometricSmilesLabel, InChlLabel, InChIKeyLabel, formalChargeLabel, atomCountLabel, chiralAtomsLabel, chiralAtomCountLabel, boundCountLabel, aromaticBoundCountLabel]
-        getRoundedBorders(forLabels: labelsArray as! [UILabel])
+        let labelsArray: [UILabel] = [ligandNameLabel, identifiersLabel, formulaLabel, molecularWeightLabel, typeLabel, isometricSmilesLabel, InChlLabel, InChIKeyLabel, formalChargeLabel, atomCountLabel, chiralAtomsLabel, chiralAtomCountLabel, boundCountLabel, aromaticBoundCountLabel]
+        getRoundedBorders(forLabels: labelsArray, with: .gray)
     }
     
-    func getRoundedBorders(forLabels labels: [UILabel]) {
+    func getRoundedBorders(forLabels labels: [UILabel], with color: UIColor) {
         for label in labels {
-            label.backgroundColor = .gray
+            label.backgroundColor = color
             label.layer.masksToBounds = true
             label.layer.cornerRadius = 5
         }

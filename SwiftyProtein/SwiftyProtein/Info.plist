@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Please provide access to be able to save a picture</string>
 	<key>NSCameraUsageDescription</key>
 	<string>In order to see AR models </string>
 	<key>NSFaceIDUsageDescription</key>
