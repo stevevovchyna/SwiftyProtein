@@ -14,7 +14,9 @@ class ProteinViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var sceneView: SCNView!
-    @IBOutlet weak var shareButton: UIButton!
+    @IBOutlet weak var reloadSceneButton: UIButton!
+    @IBOutlet weak var showARViewButton: UIButton!
+    
     
     var ligandToDisplay: Ligand?
     var ligandNode: SCNNode = SCNNode()
@@ -23,8 +25,10 @@ class ProteinViewController: UIViewController {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "LigandInfoTableViewCell", bundle: nil), forCellReuseIdentifier: "ligandInfo")
         tableView.separatorStyle = .none
-        shareButton.layer.cornerRadius = 5
-        shareButton.backgroundColor = #colorLiteral(red: 0.6666666865, green: 0.6666666865, blue: 0.6666666865, alpha: 0.7332512842)
+        reloadSceneButton.layer.cornerRadius = 5
+        reloadSceneButton.backgroundColor = #colorLiteral(red: 0.6642242074, green: 0.6642400622, blue: 0.6642315388, alpha: 0.5639447774)
+        showARViewButton.layer.cornerRadius = 5
+        showARViewButton.backgroundColor = #colorLiteral(red: 0.6642242074, green: 0.6642400622, blue: 0.6642315388, alpha: 0.5639447774)
         sceneSetup()
         if let ligand = ligandToDisplay {
             self.navigationItem.title = ligand.name
@@ -49,7 +53,7 @@ class ProteinViewController: UIViewController {
         }
     }
     
-    @IBAction func showAR(_ sender: UIBarButtonItem) {
+    @IBAction func showAR(_ sender: UIButton) {
         if AVCaptureDevice.authorizationStatus(for: .video) ==  .authorized {
             performSegue(withIdentifier: "showAR", sender: self)
         } else {
@@ -63,7 +67,7 @@ class ProteinViewController: UIViewController {
         }
     }
     
-    @IBAction func shareButtonPressed(_ sender: UIButton) {
+    @IBAction func shareButtonPressed(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Share your modelization!", message: "Enter any text to share your modelization", preferredStyle: .alert)
         guard let ligand = ligandToDisplay else { return }
         alert.addTextField { textField in
@@ -81,8 +85,7 @@ class ProteinViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    
-    @IBAction func refreshScene(_ sender: UIBarButtonItem) {
+    @IBAction func refreshScene(_ sender: UIButton) {
         ligandNode = SCNNode()
         sceneSetup()
         if let ligand = ligandToDisplay {
