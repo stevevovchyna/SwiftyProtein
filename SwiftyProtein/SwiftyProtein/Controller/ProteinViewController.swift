@@ -33,6 +33,11 @@ class ProteinViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.tintColor = .black
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.black]
+    }
+    
     @objc func handleTap(rec: UITapGestureRecognizer){
         if rec.state == .ended {
             let location: CGPoint = rec.location(in: sceneView)
@@ -175,11 +180,6 @@ extension ProteinViewController {
     private func viewColorsSetup() {
         setGradientBackground(forViewController: self.view)
         tableView.backgroundColor = .clear
-    
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-
         self.reloadSceneButton.layer.cornerRadius = 5
         self.reloadSceneButton.backgroundColor = #colorLiteral(red: 0.6642242074, green: 0.6642400622, blue: 0.6642315388, alpha: 0.25)
         self.showARViewButton.layer.cornerRadius = 5

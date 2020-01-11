@@ -27,19 +27,14 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     var isScaling = false
     var currentNode: SCNNode? = nil
     
-    // MARK : - View life cycle
+    //MARK: - View life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setupNavBar()
-        
-        if let ligand = ligandToDisplay { self.navigationItem.title = ligand.name }
         sceneView.delegate = self
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
-        
         gestureSetup()
-        
+        setupNavBar()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -56,7 +51,7 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         sceneView.session.pause()
     }
     
-    // MARK : - touch observers
+    // MARK: - touch observers
     
     @IBAction func refreshScene(_ sender: UIBarButtonItem) {
         let configuration = ARWorldTrackingConfiguration()
@@ -133,7 +128,7 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         }
     }
     
-    // MARK : - Tag: render methods
+    // MARK: - Tag: render methods
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         DispatchQueue.main.async {
@@ -252,9 +247,7 @@ class ARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     private func setupNavBar() {
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.tintColor = .black
+        self.navigationController?.navigationBar.tintColor = .white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
     }
 }
