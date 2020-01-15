@@ -21,7 +21,6 @@ class LoginViewController: UIViewController {
         let _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
         let currentImage = context.biometryType == LABiometryType.faceID ? UIImage(named: "faceID") : UIImage(named: "touchID")
         enterButton.setImage(currentImage, for: .normal)
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -105,44 +105,21 @@ class ProteinViewController: UIViewController {
 extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        guard let number = ligandToDisplay?.info?.infoArray else { return 1 }
+        return number.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let info = ligandToDisplay?.info {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath) as! LigandInfoTableViewCell
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath) as! LigandInfoTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "infoCell", for: indexPath)
             cell.backgroundColor = .clear
-            cell.ligandNameLabel.text = "Name"
-            cell.ligandName.text = info.name
-            cell.identifiersLabel.text = "Identifiers"
-            cell.identifiers.text = info.identifiers
-            cell.formulaLabel.text = "Formula"
-            cell.formula.text = info.formula
-            cell.molecularWeightLabel.text = "Molecular Weight"
-            cell.molecularWeight.text = info.formulaWeight
-            cell.typeLabel.text = "Type"
-            cell.type.text = info.type
-            cell.isometricSmilesLabel.text = "Isometric Smiles"
-            cell.isometricSmiles.text = info.smiles
-            cell.InChlLabel.text = "InChl"
-            cell.InChl.text = info.inchi
-            cell.InChIKeyLabel.text = "InChl Key"
-            cell.InChIKey.text = info.inchiKey
-            cell.formalChargeLabel.text = "Formal Charge"
-            cell.formalCharge.text = info.formalCharge
-            cell.atomCountLabel.text = "Atom Count"
-            cell.atomCount.text = info.atomCount
-            cell.chiralAtomCountLabel.text = "Chiral Atom Count"
-            cell.chiralAtomCount.text = info.chiralAtomCount
-            cell.chiralAtomsLabel.text = "Chiral Atoms"
-            cell.chiralAtoms.text = info.chiralAtomsStr
-            cell.boundCountLabel.text = "Bound Count"
-            cell.boundCount.text = info.bondCount
-            cell.aromaticBoundCountLabel.text = "Aromatic Bound Count"
-            cell.aromaticBoundCount.text = info.aromaticBondCount
+            cell.textLabel?.text = info.infoArray[indexPath.row].0
+            cell.detailTextLabel?.text = info.infoArray[indexPath.row].1
+            cell.detailTextLabel?.numberOfLines = 0
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "noDataCell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "infoCell", for: indexPath)
             cell.textLabel?.text = "No data available"
             return cell
         }

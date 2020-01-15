@@ -20,6 +20,7 @@ class Plane: SCNNode {
         self.planeAnchor = anchor
         let grid = UIImage(named: "plane_grid.png")
         self.planeGeometry = SCNPlane(width: CGFloat(anchor.extent.x), height: CGFloat(anchor.extent.z))
+        
         let material = SCNMaterial()
         material.diffuse.contents = grid
         self.planeGeometry.materials = [material]
@@ -28,6 +29,7 @@ class Plane: SCNNode {
         self.planeNode.transform = SCNMatrix4MakeRotation(-Float.pi / 2.0, 1, 0, 0)
         self.planeNode.castsShadow = false
         self.shadowPlaneGeometry = SCNPlane(width: CGFloat(anchor.extent.x), height: CGFloat(anchor.extent.z))
+        
         let shadowMaterial = SCNMaterial()
         shadowMaterial.diffuse.contents = UIColor.white
         shadowMaterial.lightingModel = .constant
@@ -37,9 +39,12 @@ class Plane: SCNNode {
         self.shadowNode = SCNNode(geometry: shadowPlaneGeometry)
         self.shadowNode.transform = planeNode.transform
         self.shadowNode.castsShadow = false
+        
         super.init()
+        
         self.addChildNode(planeNode)
         self.addChildNode(shadowNode)
+        
         self.position = SCNVector3(anchor.center.x, -0.002, anchor.center.z)
     }
     

@@ -80,10 +80,14 @@ func requestLigandDataAndInfo(forLigand ligand: String, atIndex index: Int, comp
     
     let infoOperation = DownloadOperation(session: URLSession.shared, dataTaskURLRequest: infoRequest) { (data, response, error) in
         DispatchQueue.main.async {
-            guard error == nil else { return completion(.error(error!.localizedDescription)) }
-            guard let data = data, let res = response as? HTTPURLResponse, res.statusCode == 200 else { return completion(.error("No data returned")) }
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let result = json["results"] else { return completion(.error("There was an issue with the returned data")) }
-            let info = LigandInfo(json: result as! [[String : Any]])
+            if let error = error {
+                return completion(.error(error.localizedDescription))
+            }
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                return completion(.error("Server error"))
+            }
+            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary, let results = json["results"] as? NSArray, let result = results[0] as? NSDictionary else { return completion(.error("There was an issue with the returned data")) }
+            let info = LigandInfo(json: result)
             returnLigand?.addInfo(with: info)
             completion(.success(returnLigand!))
         }
@@ -91,9 +95,13 @@ func requestLigandDataAndInfo(forLigand ligand: String, atIndex index: Int, comp
     
     let operation = DownloadOperation(session: URLSession.shared, dataTaskURLRequest: request) { (data, response, error) in
         DispatchQueue.main.async {
-            guard error == nil else { return completion(.error(error!.localizedDescription)) }
-            guard let data = data, let res = response as? HTTPURLResponse, res.statusCode == 200 else { return completion(.error("No data returned")) }
-            guard let resultString = String(data: data, encoding: .utf8) else { return completion(.error("Invalid data obtained"))}
+            if let error = error {
+                return completion(.error(error.localizedDescription))
+            }
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                return completion(.error("Server error"))
+            }
+            guard let data = data, let resultString = String(data: data, encoding: .utf8) else { return completion(.error("Invalid data obtained"))}
             returnLigand = Ligand(forLigand: ligand, withDataSet: resultString)
             queue.addOperation(infoOperation)
         }
