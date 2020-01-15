@@ -17,9 +17,10 @@ class ProteinViewController: UIViewController {
     @IBOutlet weak var reloadSceneButton: UIButton!
     @IBOutlet weak var showARViewButton: UIButton!
     
-    
     var ligandToDisplay: Ligand?
     var ligandNode: SCNNode = SCNNode()
+    
+        // MARK:- View life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,13 +31,14 @@ class ProteinViewController: UIViewController {
         viewColorsSetup()
         sceneSetup()
         ligandSetup()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.tintColor = .black
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.black]
     }
+    
+    // MARK:- gestures methods
     
     @objc func handleTap(rec: UITapGestureRecognizer){
         if rec.state == .ended {
@@ -102,6 +104,7 @@ class ProteinViewController: UIViewController {
     }
 }
 
+// MARK:- TableView datasource and delegate methods
 extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -111,12 +114,9 @@ extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let info = ligandToDisplay?.info {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath) as! LigandInfoTableViewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: "infoCell", for: indexPath)
-            cell.backgroundColor = .clear
-            cell.textLabel?.text = info.infoArray[indexPath.row].0
-            cell.detailTextLabel?.text = info.infoArray[indexPath.row].1
-            cell.detailTextLabel?.numberOfLines = 0
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ligandInfo", for: indexPath) as! LigandInfoTableViewCell
+            cell.ligandLabel.text = info.infoArray[indexPath.row].0
+            cell.ligandText.text = String(describing: info.infoArray[indexPath.row].1)
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "infoCell", for: indexPath)
@@ -129,6 +129,8 @@ extension ProteinViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.cellForRow(at: indexPath)?.isSelected = false
     }
 }
+
+// MARK:- private methods
 
 extension ProteinViewController {
     private func sceneSetup() {

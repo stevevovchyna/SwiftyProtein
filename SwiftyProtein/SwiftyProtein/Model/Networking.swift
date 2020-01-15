@@ -62,50 +62,61 @@ class DownloadOperation : Operation {
     }
 }
 
-func requestLigandDataAndInfo(forLigand ligand: String, atIndex index: Int, completion: @escaping (Result<Ligand>) -> Void) {
-    let queue = OperationQueue()
-    var returnLigand : Ligand? = nil
+class DownloadManager {
+    private let queue = OperationQueue()
     
-    queue.maxConcurrentOperationCount = 1
+    private let ligandRequestStringBase = "https://files.rcsb.org/ligands/view/"
+    private let ligandInfoRequestStringBase = "https://rest.rcsb.org/rest/ligands/"
+    private let httpMethod = "get"
     
-    let authString = "https://files.rcsb.org/ligands/view/\(ligand.lowercased())_ideal.pdb"
-    let url = URL(string: authString)
-    var request = URLRequest(url: url!)
-    request.httpMethod = "get"
-    
-    let authStringInfo = "https://rest.rcsb.org/rest/ligands/\(ligand.lowercased())"
-    let infoUrl = URL(string: authStringInfo)
-    var infoRequest = URLRequest(url: infoUrl!)
-    infoRequest.httpMethod = "get"
-    
-    let infoOperation = DownloadOperation(session: URLSession.shared, dataTaskURLRequest: infoRequest) { (data, response, error) in
-        DispatchQueue.main.async {
-            if let error = error {
-                return completion(.error(error.localizedDescription))
-            }
-            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                return completion(.error("Server error"))
-            }
-            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary, let results = json["results"] as? NSArray, let result = results[0] as? NSDictionary else { return completion(.error("There was an issue with the returned data")) }
-            let info = LigandInfo(json: result)
-            returnLigand?.addInfo(with: info)
-            completion(.success(returnLigand!))
-        }
+    init() {
+        queue.maxConcurrentOperationCount = 1
     }
     
-    let operation = DownloadOperation(session: URLSession.shared, dataTaskURLRequest: request) { (data, response, error) in
-        DispatchQueue.main.async {
-            if let error = error {
-                return completion(.error(error.localizedDescription))
+    public func requestLigandDataNInfo(forLigand ligand: String, atIndex index: Int, completion: @escaping (Result<Ligand>) -> Void) {
+        var returnLigand : Ligand? = nil
+        
+        let ligandRequestString = ligandRequestStringBase + ligand.lowercased() + "_ideal.pdb"
+        let infoRequestString = ligandInfoRequestStringBase + ligand.lowercased()
+        
+        let ligandURL = URL(string: ligandRequestString)
+        var ligandRequest = URLRequest(url: ligandURL!)
+        ligandRequest.httpMethod = httpMethod
+        
+        let infoURL = URL(string: infoRequestString)
+        var infoRequest = URLRequest(url: infoURL!)
+        infoRequest.httpMethod = httpMethod
+        
+        let infoOperation = DownloadOperation(session: URLSession.shared, dataTaskURLRequest: infoRequest) { (data, response, error) in
+            DispatchQueue.main.async {
+                if let error = error {
+                    return completion(.error(error.localizedDescription))
+                }
+                guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                    return completion(.error("Server error"))
+                }
+                guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary, let results = json["results"] as? NSArray, let result = results[0] as? NSDictionary else { return completion(.error("There was an issue with the returned data")) }
+                let info = LigandInfo(json: result)
+                returnLigand?.addInfo(with: info)
+                completion(.success(returnLigand!))
             }
-            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                return completion(.error("Server error"))
-            }
-            guard let data = data, let resultString = String(data: data, encoding: .utf8) else { return completion(.error("Invalid data obtained"))}
-            returnLigand = Ligand(forLigand: ligand, withDataSet: resultString)
-            queue.addOperation(infoOperation)
         }
+        
+        let operation = DownloadOperation(session: URLSession.shared, dataTaskURLRequest: ligandRequest) { (data, response, error) in
+            DispatchQueue.main.async {
+                if let error = error {
+                    return completion(.error(error.localizedDescription))
+                }
+                guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                    return completion(.error("Server error"))
+                }
+                guard let data = data, let resultString = String(data: data, encoding: .utf8) else { return completion(.error("Invalid data obtained"))}
+                returnLigand = Ligand(forLigand: ligand, withDataSet: resultString)
+                self.queue.addOperation(infoOperation)
+            }
+        }
+        
+        queue.addOperation(operation)
+
     }
-    
-    queue.addOperation(operation)
 }

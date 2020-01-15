@@ -14,6 +14,8 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var enterButton: UIButton!
     
+    //MARK:- View life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setGradientBackground(forViewController: self.view)
@@ -36,8 +38,13 @@ class LoginViewController: UIViewController {
     @IBAction func enterButtonPressed(_ sender: UIButton) {
         authenticationWithTouchID()
     }
+}
+
+
+// MARK:- auth methods
+extension LoginViewController {
     
-    func authenticationWithTouchID() {
+    private func authenticationWithTouchID() {
         let localAuthenticationContext = LAContext()
         localAuthenticationContext.localizedFallbackTitle = "Use Passcode"
 
@@ -65,7 +72,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func authenticationWithPasscode() {
+    private func authenticationWithPasscode() {
         let localAuthenticationContext = LAContext()
         localAuthenticationContext.localizedFallbackTitle = "Use Passcode"
         var authError: NSError?
@@ -88,7 +95,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func evaluateAuthenticationPolicyMessageForLA(errorCode: Int) -> String {
+    private func evaluateAuthenticationPolicyMessageForLA(errorCode: Int) -> String {
         var message = ""
         switch errorCode {
         case LAError.authenticationFailed.rawValue:

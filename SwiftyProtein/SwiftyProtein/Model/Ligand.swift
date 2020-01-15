@@ -29,14 +29,13 @@ struct Atom {
 
 struct Conect {
     let id: Int
-    var bondAtoms: [Int]
+    var bondAtoms: [Int] = []
     
     init(conectData data: String) {
         id = (data[data.index(data.startIndex, offsetBy: 6)...data.index(data.startIndex, offsetBy: 10)] as NSString).integerValue
         let bondsString = String(data[data.index(data.startIndex, offsetBy: 11)...data.index(before: data.endIndex)])
         var bondsArray = bondsString.components(separatedBy: " ")
         bondsArray = bondsArray.filter{ $0 != "" }
-        bondAtoms = []
         for bond in bondsArray {
             self.bondAtoms.append((bond as NSString).integerValue)
         }
@@ -44,13 +43,15 @@ struct Conect {
 }
 
 struct LigandInfo {
-    var infoArray : [(String, String)] = []
+    var infoArray : [(String, Any)] = []
     
     init(json: NSDictionary) {
         for el in json {
-            let data = (el.key as? String ?? "No data", el.value as? String ?? "No data")
+            let name = el.key as? String ?? "No data"
+            let data = (name.camelCaseToWords().capitalized, el.value)
             infoArray.append(data)
         }
+        infoArray = infoArray.sorted(by: {$0.0 < $1.0})
     }
 }
 
@@ -87,7 +88,8 @@ struct Ligand {
 }
 
 extension Ligand {
-    func createLigandNode() -> SCNNode {
+    
+    public func createLigandNode() -> SCNNode {
         let liganeMolecule = SCNNode()
         liganeMolecule.physicsBody?.type = .static
         liganeMolecule.name = "ligand"
@@ -151,7 +153,8 @@ extension Ligand {
 }
 
 extension Ligand {
-    func createARLigandNode() -> SCNNode {
+    
+    public func createARLigandNode() -> SCNNode {
         var minVec = SCNVector3Zero
         var maxVec = SCNVector3Zero
         let ligand = self.createLigandNode()

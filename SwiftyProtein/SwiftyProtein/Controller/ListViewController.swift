@@ -16,10 +16,12 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     var allLigands : [String] = []
     var ligandToPass : Ligand?
     let status = UIActivityIndicatorView()
+    let downloadManager = DownloadManager()
     
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var searchBar: UISearchBar!
+    
+    // MARK:- View life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupColor()
@@ -60,7 +62,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         changeTableViewAcessibility(toActive: false, forRowAt: indexPath, in: tableView, in: status)
-        requestLigandDataAndInfo(forLigand: ligands[indexPath.row], atIndex: indexPath.row) { result in
+        downloadManager.requestLigandDataNInfo(forLigand: ligands[indexPath.row], atIndex: indexPath.row) { result in
             switch result {
             case .error(let err):
                 presentAlert(text: err, in: self)
@@ -95,6 +97,8 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
 }
+
+// MARK:- private methods
 
 extension ListViewController {
     
